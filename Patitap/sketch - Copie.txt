@@ -1,0 +1,686 @@
+var amplitude;
+var coverbackground
+var Xpast = new Array()
+var Ypast = new Array()
+var transparence
+var timeStart
+var timeAnim
+var priorite
+var oldpriority
+//var scribble = new Scribble(); pourquoi "non définie ?"
+
+
+/*var Xexclude = new Array()
+var Yexclude = new Array()*/
+var j = 0
+var i =0
+
+
+function preload() {
+    masterVolume(7)
+
+    sound1 = loadSound("assets/Superbes_enregistrements/TASCAM_0450.wav")
+    sound2 = loadSound("assets/Superbes_enregistrements/TASCAM_0451.wav")
+    sound3 = loadSound("assets/Superbes_enregistrements/TASCAM_0452.wav")
+    sound4 = loadSound("assets/Superbes_enregistrements/TASCAM_0453.wav")
+    sound5 = loadSound("assets/Superbes_enregistrements/TASCAM_0455.wav")
+    sound6 = loadSound("assets/Superbes_enregistrements/TASCAM_0456.wav")
+    sound7 = loadSound("assets/Superbes_enregistrements/TASCAM_0459.wav")
+    sound8 = loadSound("assets/Superbes_enregistrements/TASCAM_0460.wav")
+    sound9 = loadSound("assets/Superbes_enregistrements/TASCAM_0461.wav")
+    sound10 = loadSound("assets/Superbes_enregistrements/TASCAM_0463.wav")
+
+    sound11 = loadSound("assets/Superbes_enregistrements/TASCAM_0464.wav")
+
+    soundA = loadSound("assets/Superbes_enregistrements/TASCAM_0467.wav")
+    soundB = loadSound("assets/Superbes_enregistrements/TASCAM_0482.wav")
+    soundC = loadSound("assets/Superbes_enregistrements/TASCAM_0469.wav")
+    soundD = loadSound("assets/Superbes_enregistrements/TASCAM_0470.wav")
+    soundE = loadSound("assets/Superbes_enregistrements/TASCAM_0471.wav")
+    soundF = loadSound("assets/Superbes_enregistrements/TASCAM_0474.wav")
+    soundG = loadSound("assets/Superbes_enregistrements/TASCAM_0475.wav")
+    soundH = loadSound("assets/Superbes_enregistrements/TASCAM_0476.wav")
+    soundI = loadSound("assets/Superbes_enregistrements/TASCAM_0477.wav")
+    soundJ = loadSound("assets/Superbes_enregistrements/TASCAM_0478.wav")
+    soundK = loadSound("assets/Superbes_enregistrements/TASCAM_0480.wav")
+    soundL = loadSound("assets/Superbes_enregistrements/TASCAM_0484.wav")
+    soundM = loadSound("assets/Superbes_enregistrements/En_passant_pecho.mp3")
+    soundN = loadSound("assets/Superbes_enregistrements/TASCAM_0491.wav")
+    soundO = loadSound("assets/Superbes_enregistrements/TASCAM_0449.wav")
+    soundP = loadSound("assets/Superbes_enregistrements/TASCAM_0448.wav")
+
+
+
+
+
+
+}
+
+function setup() {
+    canvas = createCanvas(windowWidth, windowHeight);
+    background(0, 40);
+    // playMode(RESTART)
+    console.log(sound1.duration())
+    amplitude = new p5.Amplitude()
+    //mesurer amplitude max de sound2
+    var level2 = amplitude.getLevel();
+
+    /* a = 150 / height
+     b = 70 / width
+     console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA=" + a)
+     console.log("BBBBBBBBBBBBBBBBBBBBBBBBB=" + b)*/
+    Xrect = 0.04375 * width
+    Yrect = 0.20380434782608695 * height //reponsive !
+    Xpast[0] = (Xrect / 2 + 5) //initialiser en dehors de l'écran sans perdre de plance dans le canvas
+    Ypast[0] = (Yrect / 2 + 5)
+    transparence = 40
+    /* priorite = 1
+     oldpriority = 1*/
+    setTimeout(animJ, 2000)
+
+
+
+}
+
+
+function draw() {
+    background(0, transparence)
+
+    musicPlay(sound1, 65) //a
+    musicPlay(sound2, 66) //b
+    musicPlay(sound3, 67) //c
+    musicPlay(sound4, 68) //d
+    musicPlay(sound5, 69) //e
+    musicPlay(sound6, 70) //f
+    musicPlay(sound7, 71) //g
+    musicPlay(sound8, 72) ////h
+    musicPlay(sound9, 73) //i
+    musicPlay(sound10, 74) //j
+
+    musicPlay(soundA, 75) //k
+    musicPlay(soundB, 76) //l
+    musicPlay(soundC, 77) //m
+    musicPlay(soundD, 87) //w oubliés 
+    musicPlay(soundE, 88) //x de dernière minute
+    musicPlay(soundF, 78) //n
+    musicPlay(soundG, 79) //o
+    musicPlay(soundH, 80) //p
+    musicPlay(soundI, 81) //q
+    musicPlay(soundJ, 82) //r
+    musicPlay(soundK, 83) //s
+    musicPlay(soundL, 84) //t
+    musicPlay(soundM, 85) //u
+    musicPlay(soundN, 86) //v
+    musicPlay(soundO, 89) //y
+    musicPlay(soundP, 90) //z
+    musicPlay(sound11, 91) //z
+
+    if (sound1.currentTime() < sound1.duration() - 0.1 && sound1.currentTime() > 0) {
+        transparence = 1
+        anim1()
+    } else if (sound1.currentTime() > sound1.duration() - 0.1) {
+        transparence = 40
+    }
+
+    if (sound2.currentTime() < sound2.duration() - 0.1 && sound2.currentTime() > 0) {
+        anim2()
+    }
+
+
+    if (sound3.currentTime() < sound3.duration() - 0.1 && sound3.currentTime() > 0) {
+        anim3()
+
+    }
+
+    if (sound4.currentTime() < sound4.duration() - 0.1 && sound4.currentTime() > 0) {
+        anim4()
+    }
+
+    if (sound5.currentTime() < sound5.duration() - 0.1 && sound5.currentTime() > 0) {
+        anim5()
+    }
+
+    if (sound6.currentTime() < sound6.duration() - 0.1 && sound6.currentTime() > 0) {
+        anim6()
+    }
+    if (sound7.currentTime() < sound7.duration() - 0.1 && sound7.currentTime() > 0) {
+        anim7()
+    }
+    if (sound8.currentTime() < sound8.duration() - 0.1 && sound8.currentTime() > 0) {
+        anim8()
+    }
+    if (sound9.currentTime() < sound9.duration() - 0.1 && sound9.currentTime() > 0) {
+        anim9()
+    }
+    if (sound10.currentTime() < sound10.duration() - 0.1 && sound10.currentTime() > 0) {
+        anim10()
+    }
+
+    if (sound11.currentTime() < sound11.duration() - 0.1 && sound11.currentTime() > 0) {
+        anim11()
+    }
+
+    if (soundA.currentTime() < soundA.duration() - 0.1 && soundA.currentTime() > 0) {
+        animA()
+    } else if (soundA.currentTime() > soundA.duration() - 0.1) {
+        transparence = 40
+    }
+    if (soundB.currentTime() < soundB.duration() - 0.1 && soundB.currentTime() > 0) {
+        animB()
+    } else if (soundB.currentTime() > soundB.duration() - 0.1) {
+        transparence = 40
+    }
+    if (soundC.currentTime() < soundC.duration() - 0.1 && soundC.currentTime() > 0) {
+        animC()
+    } else if (soundC.currentTime() > soundC.duration() - 0.1) {
+        transparence = 40
+    }
+    if (soundD.currentTime() < soundD.duration() - 0.1 && soundD.currentTime() > 0) {
+        animD()
+    } else if (soundD.currentTime() > soundD.duration() - 0.1) {
+        transparence = 40
+    }
+    if (soundE.currentTime() < soundE.duration() - 0.1 && soundE.currentTime() > 0) {
+        animE()
+    } else if (soundE.currentTime() > soundE.duration() - 0.1) {
+        transparence = 40
+    }
+    if (soundF.currentTime() < soundF.duration() - 0.1 && soundF.currentTime() > 0) {
+        animF()
+    } else if (soundF.currentTime() > soundF.duration() - 0.1) {
+        transparence = 40
+    }
+    if (soundG.currentTime() < soundG.duration() - 0.1 && soundG.currentTime() > 0) {
+        animG()
+    } else if (soundG.currentTime() > soundG.duration() - 0.1) {
+        transparence = 40
+    }
+    if (soundH.currentTime() < soundH.duration() - 0.1 && soundH.currentTime() > 0) {
+        animH()
+    } else if (soundH.currentTime() > soundH.duration() - 0.1) {
+        transparence = 40
+    }
+    if (soundI.currentTime() < soundI.duration() - 0.1 && soundI.currentTime() > 0) {
+        animI()
+    } else if (soundJ.currentTime() > soundJ.duration() - 0.1) {
+        transparence = 40
+    }
+    if (soundJ.currentTime() < soundJ.duration() - 0.1 && soundJ.currentTime() > 0) {
+        animJ()
+    } else if (soundJ.currentTime() > soundJ.duration() - 0.1) {
+        transparence = 40
+    }
+    if (soundK.currentTime() < soundK.duration() - 0.1 && soundK.currentTime() > 0) {
+       
+        var IntervalK = setInterval(animK, 4000);
+    } else if (soundK.currentTime() > soundK.duration() - 0.1) {
+        transparence = 40
+         i = 0
+        clearInterval(IntervalK)
+    }
+    if (soundL.currentTime() < soundL.duration() - 0.1 && soundL.currentTime() > 0) {
+        animL()
+    } else if (soundL.currentTime() > soundL.duration() - 0.1) {
+        transparence = 40
+    }
+    if (soundM.currentTime() < soundM.duration() - 0.1 && soundM.currentTime() > 0) {
+        animM()
+    } else if (soundM.currentTime() > soundM.duration() - 0.1) {
+        transparence = 40
+    }
+    if (soundN.currentTime() < soundN.duration() - 0.1 && soundN.currentTime() > 0) {
+        animN()
+    } else if (soundN.currentTime() > soundN.duration() - 0.1) {
+        transparence = 40
+    }
+
+    if (soundO.currentTime() < soundO.duration() - 0.1 && soundO.currentTime() > 0) {
+        animO()
+    } else if (soundO.currentTime() > soundO.duration() - 0.1) {
+        transparence = 40
+    }
+    if (soundP.currentTime() < soundP.duration() - 0.1 && soundP.currentTime() > 0) {
+        animP()
+    } else if (soundP.currentTime() > soundP.duration() - 0.1) {
+        transparence = 40
+    }
+
+
+} //loop
+
+
+
+function musicPlay(sound, keyID) {
+
+    if (keyIsDown(keyID) == true) {
+
+        if (sound.isPlaying() == true) {
+            sound.stop()
+            sound.play()
+        } else {
+            sound.play()
+        }
+    } //ifkeydown
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight)
+    background(0)
+}
+
+/*function coverbackground(transparence, priorite) {
+    if (priorite >= oldpriority) { //change la transparence du background enfonction de l'anim appelante. Definit un ordre de priorité 
+        background(0, transparence)
+        oldpriority = priorite
+    }
+}*/
+
+
+function anim1() {
+    /* if (sound1.isPlaying) {
+         transparence = 1
+     } else { //ne fonctionne pas 
+         transparence = 40
+     }*/
+
+    amplitude.setInput(sound1)
+    var level = amplitude.getLevel()
+    console.log(level)
+    var displayy = map(level, 0, 0.0025, 0, 100)
+
+    if (displayy > 85) { // conditon d'affichage : si % sonore>90
+        x = random((Xrect / 2 + 5), width - (Xrect / 2 + 5)) //premiere pos aléatoire
+        y = random(80, height - 80)
+
+
+        // POUR EVITER UNE SUPERPOSITION DES FORMES :
+        Xpast[j] = x //mémoire des positions des rectangles précédents
+        Ypast[j] = y
+        // console.log("boucle1 if=" + Xpast + "//" + Ypast + "    //" + j)
+
+
+        var coule = 0
+
+        while (coule == 0) {
+            console.log("old x &y =" + x + "___" + y)
+            g = 0
+            while ((g < Xpast.length) && ((Math.abs(Xpast[g] - x) > (Xrect + 3)) || (Math.abs(Ypast[g] - y) > (Yrect + 3)))) { //s'arrête si il a parcouru tout le 
+                g++ //tableau ou si touche en X ou Y
+                /*console.log("XpastG" + Xpast[g])
+                console.log("YpastG" + Ypast[g])
+                console.log("absX=" + (Math.abs(Xpast[g] - x)))
+                console.log("absY=" + (Math.abs(Ypast[g] - y)))3
+                console.log("G DANS WHILE DE WHILE, g=" + g + "// x=" + x + "//y =" + y)*/
+            }
+
+            // console.log(" BETWEEN while and if g" + g + " et Xpast=" + Xpast.length)
+            if (g == Xpast.length) { //sortie de la boucle si vérification faite avec toutes les valeurs
+                coule = 1
+                //console.log(" IF Xpast.length=" + Xpast.length + "//g=" + g)
+            } else { // si la lecture s'est arrêtée en cours de route ; alors position non valide : relance de valeurs aléatoires
+                x = random((Xrect / 2 + 5), width - (Xrect / 2 + 5))
+                y = random((Yrect / 2 + 5), height - (Yrect / 2 + 5))
+                //console.log(" ELSE new x =" + x + " // y=" + y)
+            }
+
+        }
+        Xpast[j] = x //ajout des nouvelles valeurs x, y dans la mémoire
+        Ypast[j] = y
+        console.log("final x & y =" + x + "," + y)
+        console.log(Xpast)
+        console.log("**********************************************************NOUVEAU BLOC n°" + j + "********************************")
+        noStroke()
+        fill(220)
+        rectMode(CENTER)
+        rect(x, y, Xrect, Yrect, 15)
+        j += 1
+
+
+
+        /*  for (i = 0; i < Xpast.length; i++) { // pour ne pas surperposer les formes
+              // console.log("je suis dans la boucle for")
+
+              if ((Math.abs(Xpast[i] - x) < 35)) /* && (Math.abs(Ypast[i] - y < 75))) { //si ils se touchent
+                  x = random(40, width - 40)
+                  console.log("x=" + x)
+
+                  for (i = 0; i < Ypast.length; i++) {
+                      if ((Math.abs(Ypast[i] - y) < 75)) {
+                          y = random(80, height - 80)
+                      }
+                  }
+
+                  Xpast[i] = x
+                  Ypast[i] = y
+              }
+
+          }*/
+
+    }
+} //anim1
+
+
+function anim2() {
+    /*   push()
+    translate(width / 2, height / 2)
+    for (i = 0; i < TWO_PI; i++) {
+        image(iban, 0, 200)
+        image(iban, 0, -200)
+        image(iban, -200, 0)
+        image(iban, 200, 0)
+        rotate(i)
+    }
+
+
+    pop()
+*/
+}
+
+function anim3() {
+    ecran = createGraphics(width, height)
+    background(255, 255, 20, );
+    fill(255, 255, 0)
+
+
+    for (i = 0; i < 30; i++) {
+        push();
+        translate(random(width), random(height));
+        rotate(i)
+        rectMode(CENTER)
+        noStroke();
+        fill(random(80), random(250), random(255));
+        rect(0, 0, 200, 50, 10);
+        pop();
+
+
+    } //pourquoi cette boucle ne se répète aussi longtemps que dure la chanson?
+
+    transparence = 15
+    ecran.remove()
+}
+
+function anim4() {
+
+}
+
+function anim5() { //sono depuis le coté gauche
+    /* amplitude.setInput(sound5);
+     var sonoLevel = amplitude.getLevel()
+     print("level=" + sonoLevel)
+     var sono = map(sonoLevel, 0, 0.1, 0, 255);
+     print("couleursono" + sono)
+     for (var x = 0; x < height; x++) {
+         var noiseVal = noise(x * 0.05, height * 0.08);
+         var couleur = noiseVal * sono
+         stroke(couleur, couleur * random(0, 1), couleur * random(0, 5))
+         line(0, x, noiseVal * 700, x);
+     }*/
+}
+
+function anim6() {
+    /* amplitude.setInput(sound6)
+    var sonAmp = amplitude.getLevel()
+    print("sonAMp=" + sonAmp)
+    var positionX = map(sonAmp, 0, 0.1, 0, width)
+    var positionY = map(sonAmp, 0, 0.1, 0, height)
+    for (i = 0; i < width; i++) { //height<width donc width condition de la boucle
+        push()
+        colorMode(HSB, 420, 120, 120)
+        stroke(20)
+        strokeWeight(2)
+        fill(random(0, 420), 120, 120)
+        ellipse(positionX, positionY, 30, 30)
+        ellipse(positionX * random(0.5, 1.3), positionY * random(0.5, 1.3), 20, 20) // pourquoi ça crée un gros paquet de points ?
+        pop()
+    }
+*/
+    transparence = 10
+    push()
+    noStroke()
+    fill(255)
+    arc(0, 0, i * 10, i * 10, 0 + PI, CHORD)
+    for (i = 1; i < 18; i++) {
+
+        push()
+        // var angle = height / sqrt(pow(width, 2) + pow(height, 2))
+        arc(0, 0, i * 10, i * 10, 0 + PI, CHORD)
+        pop()
+        translate(i * width / 60, i * height / 60)
+        arc(50, 50, 80, 80, 0, PI + QUARTER_PI, CHORD)
+    }
+
+    pop()
+}
+
+function anim7() {
+    /*for (posX = width / 12; posX < width; posX = posX + width / 12) { //comment faire un delay pour apparition progressive des barres ?
+        // delai = millis()
+        strokeWeight(10)
+        stroke(255)
+        line(posX, height * 0.8, posX, height * 0.2)
+    }*/
+}
+
+function anim8() {
+    /*
+        push()
+        for (x = 0; x < width; x++) {
+            for (var i = 0; i < 200; i += 20) {
+
+                noFill();
+                stroke(255)
+                strokeWeight(2);
+                bezier(0, 60 + i, 430, 40, 460, 320, 260 - (i / 16), 320 + (i / 8));
+
+            }
+            translate(400, 200)
+            rotate(PI / 4)
+        }
+        pop()*/
+}
+
+function anim9() { //pas fonctionnel
+    /*   stroke(220)
+       strokeWeight(2)
+       noFill()
+       ellipse(width / 2, height / 2, 400, 400)
+       for (i = 1; i > 0; i++) {
+           push()
+           translate(width / 2, height / 2)
+           stroke(220)
+           strokeWeight(2)
+           noFill()
+           ellipse(0, 400, 50, 50)
+           rotate(PI / 24)
+           pop() 
+
+       }
+       */
+
+}
+
+function anim10() { //j
+    /*
+        var xpos, ypos;
+        var xspeed = 5.6;
+        yspeed = 4.4;
+        var xdirection = 1;
+        ydirection = 1;
+        ellipseMode(RADIUS);
+
+        xpos = width / 2;
+        ypos = height / 2;
+        xpos = xpos + xspeed * xdirection;
+        ypos = ypos + yspeed * ydirection;
+        if (xpos > width - 100 && xpos < 100) {
+            xdirection *= -1;
+        }
+        if (ypos > height - 100 && ypos < 100) {
+            ydirection *= -1;
+            fill(255)
+            ellipse(xpos, ypos, 100, 100);
+
+        }*/
+}
+
+function anim11() {
+
+}
+
+function animA() {
+    /* var x = 200;
+     var it = 0;
+     for (i = x; i < width - x; i + x) { //test uselless
+         it++
+         /*for (it + i < width) {
+             it++
+         }
+
+         if (it % 2 == 0) {
+             var XPOS = height / 2 + x
+         } else {
+             XPOS = height / 2 - x
+         }
+         noFill()
+         strokeWeight(5)
+         stroke(255)
+         beginShape()
+         vertex(i, XPOS)
+         endShape()
+     }*/
+}
+
+function animB() {
+    /* // move to the first point
+    ctx.moveTo(points[0].x, points[0].y);
+
+
+    for (i = 1; i < points.length - 2; i++) {
+        var xc = (points[i].x + points[i + 1].x) / 2;
+        var yc = (points[i].y + points[i + 1].y) / 2;
+        ctx.quadraticCurveTo(points[i].x, points[i].y, xc, yc);
+        fill(255)
+        stroke(120, 20, 10)
+    }
+    // curve through the last two points
+    ctx.quadraticCurveTo(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
+*/ //mesurer amplitude max de sound2
+    amplitude.setInput(sound2)
+    var level2 = amplitude.getLevel();
+    var sound2max = 0
+    if (level2 > sound2max) {
+        sound2max = level2
+    }
+    posiX = width / 12
+
+    for (i = posiX; i < 11 * posiX; i++) { //6 pour rester entre les deux points extremes de la curve
+
+        amplitude.setInput(sound2)
+        smooth(sound2)
+        var level2 = amplitude.getLevel();
+        console.log("level anim2 =" + level2)
+        var levelY = map(level2, 0, 0.001, 0, 130) //val changeantes, n'importe quoi
+        var variationX = map(sound4.duration(), 0, 2.352, 0, 130)
+        var variationY =
+            console.log("sound4=" + sound4.duration())
+        noFill()
+        stroke(255)
+        line(i, height / 2 + levelY, i, height / 2 - levelY)
+
+        //,chrono(40)
+        // console.log("soundmax="+sound2max)
+    }
+
+}
+
+function animC() {
+
+}
+
+function animD() {
+
+}
+
+function animE() {
+
+}
+
+function animF() {
+
+}
+
+function animG() {
+
+}
+
+function animH() {
+
+}
+
+function animI() {
+
+}
+
+function animJ() {
+
+
+}
+
+function animK() {
+    transparence = 10
+    if (i<7)
+    {i += 1}
+    push()
+    translate(width / 2, height / 2)
+    fill(255, 38 * i, 0)
+    push()
+
+    translate(height / 5 * cos(i * PI / 6), height / 5 * sin(i * PI / 6))
+    rect(0, 0, 40, 170, 10)
+    pop()
+
+
+
+    fill(255, 38 * i, 0)
+    push()
+    
+    translate(-height / 5 * cos(i * PI / 6), -height / 5 * sin(i * PI / 6))
+    rect(0, 0, 40, 170, 10)
+    pop()
+
+    pop()
+
+
+
+    console.log(i)
+   
+}
+
+
+function animL() {
+
+}
+
+function animM() {
+
+}
+
+function animN() {
+
+}
+
+function animO() {
+
+}
+
+function animP() {
+
+}
+
+function chrono(delai) {
+
+    tstamp = frameCount
+    timeToAnim = tstamp + delai * 60
+
+
+}
