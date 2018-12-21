@@ -1,0 +1,165 @@
+@charset "utf-8";
+	.bleur_clair
+{
+	background : #80BDFF;
+	background : rgba(128, 189, 255, 1);
+	position : absolute ;
+	left : 310px;
+	top : 445px;
+}
+.trou_de_nez
+{
+	background : #000000;
+	background : rgba(0, 0, 0, 1);
+	position : absolute ;
+	left : 318px;
+	top : 318px;
+}
+.lobe
+{
+	border-style : Solid;
+	border-color : #000000;
+	border-color : rgba(0, 0, 0, 1);
+	border-width : 5px;
+	position : absolute ;
+	left : 474px;
+	top : 253px;
+}
+.visage_contour
+{
+	border-style : Solid;
+	border-color : #000000;
+	border-color : rgba(0, 0, 0, 1);
+	border-width : 5px;
+	position : absolute ;
+	left : 239px;
+	top : 101px;
+}
+.oreilel_marron
+{
+	background : #682F00;
+	background : rgba(104, 47, 0, 1);
+	border-style : Solid;
+	border-color : #000000;
+	border-color : rgba(0, 0, 0, 1);
+	border-width : 3px;
+	position : absolute ;
+	left : 460px;
+	top : 202px;
+}
+.contour_cou
+{
+	border-style : Solid;
+	border-color : #000000;
+	border-color : rgba(0, 0, 0, 1);
+	border-width : 4px;
+	position : absolute ;
+	left : 309px;
+	top : 337px;
+}
+.oeil_gauche
+{
+	background-image : url(oeil_gauche.png);
+	background-repeat : no-repeat;
+	position : absolute ;
+	left : 264px;
+	top : 216px;
+}
+.cheveyx_noirs
+{
+	background : #333333;
+	background : rgba(51, 51, 51, 1);
+	border-style : Solid;
+	border-color : #000000;
+	border-color : rgba(0, 0, 0, 1);
+	border-width : 5px;
+	position : absolute ;
+	left : 240px;
+	top : 33px;
+}
+.jaune
+{
+	background : #F2FFD1;
+	background : rgba(242, 255, 209, 1);
+	position : absolute ;
+	left : 239px;
+	top : 200px;
+}
+.bleu_fonc
+{
+	background : #5D8DFF;
+	background : rgba(93, 141, 255, 1);
+	position : absolute ;
+	left : 309px;
+	top : 101px;
+}
+.bouche
+{
+	background-image : url(bouche.png);
+	background-repeat : no-repeat;
+	position : absolute ;
+	left : 285px;
+	top : 367px;
+}
+.marron
+{
+	background : #7A3A0A;
+	background : rgba(122, 58, 10, 1);
+	position : absolute ;
+	left : 383px;
+	top : 240px;
+}
+.t_shirt_1_
+{
+	background : #999999;
+	background : rgba(153, 153, 153, 1);
+	border-style : Solid;
+	border-color : #000000;
+	border-color : rgba(0, 0, 0, 1);
+	border-width : 4px;
+	position : absolute ;
+	left : 90px;
+	top : 337px;
+}
+.nez_partie_droite
+{
+	border-style : Solid;
+	border-color : #000000;
+	border-color : rgba(0, 0, 0, 1);
+	border-width : 2px;
+	position : absolute ;
+	left : 327px;
+	top : 300px;
+}
+.visage_bleu_clair
+{
+	background : #A3CFFF;
+	background : rgba(163, 207, 255, 1);
+	border-style : Solid;
+	border-color : #000000;
+	border-color : rgba(0, 0, 0, 1);
+	border-width : 5px;
+	position : absolute ;
+	left : 239px;
+	top : 101px;
+}
+.nez_artie_gauche
+{
+	border-style : Solid;
+	border-color : #000000;
+	border-color : rgba(0, 0, 0, 1);
+	border-width : 3px;
+	position : absolute ;
+	left : 262px;
+	top : 201px;
+}
+.nez_partie_doirte
+{
+	border-style : Solid;
+	border-color : #000000;
+	border-color : rgba(0, 0, 0, 1);
+	border-width : 2px;
+	position : absolute ;
+	left : 328px;
+	top : 194px;
+}
