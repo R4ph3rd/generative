@@ -11,6 +11,8 @@ var biscottes = []
 var pg
 var transparence
 
+//h
+var cordes = []
 //l
 var cerclesConfiance = []
 
@@ -34,45 +36,53 @@ var i = 0
 var n = 0
 var seed = 1234;
 
+//o
+var amppX = 50
+var amppY = 100
+
+//l
 var angleL = 20
 var speedL = 0.25
 var radiusL = 90
 var sx = 30
 var sy = 30
 
+//q
+var angleQ = 20
+var speedQ = 0.25
+var radiusQ = 50
+
+//x
+var sizeX = 0
+var sizeY =0
+
 function preload() {
-    soundA = loadSound("assets/Animaux_sounds/BADOUM_ELEPHANT.wav")
-    soundB = loadSound("assets/Animaux_sounds/BISCOTTE.wav")
-    soundC = loadSound("assets/Animaux_sounds/CAPUCHE.wav")
-    soundD = loadSound("assets/Animaux_sounds/EHOH_LA_FOURMI.wav")
-    soundE = loadSound("assets/Animaux_sounds/EXTRATERE.wav")
-    soundF = loadSound("assets/Animaux_sounds/KARL.wav")
-    soundG = loadSound("assets/Animaux_sounds/LAMA.wav")
-    soundH = loadSound("assets/Animaux_sounds/MAYA.wav")
-    soundI = loadSound("assets/Animaux_sounds/NASIQUE.wav")
-    soundJ = loadSound("assets/Animaux_sounds/PEROQUET.wav")
-    soundK = loadSound("assets/Animaux_sounds/PULUPULU.wav")
-    soundL = loadSound("assets/Animaux_sounds/SERPENT.wav")
-    soundM = loadSound("assets/Animaux_sounds/TATOU.wav")
-    soundN = loadSound("assets/Animaux_sounds/WHOOMLONG.wav")
-    soundO = loadSound("assets/Animaux_sounds/ROGNEUGNEU.wav")
-    soundP = loadSound("assets/Animaux_sounds/AREVOIR-TOISINGE.wav")
-    soundQ = loadSound("assets/Animaux_sounds/PICPIC.wav")
-    soundR = loadSound("assets/Superbes_enregistrements/TASCAM_0476.wav")
-    soundS = loadSound("assets/Superbes_enregistrements/TASCAM_0477.wav")
-    soundT = loadSound("assets/Superbes_enregistrements/TASCAM_0478.wav")
-    soundU = loadSound("assets/Superbes_enregistrements/TASCAM_0480.wav")
-    soundV = loadSound("assets/Superbes_enregistrements/TASCAM_0484.wav")
-    soundW = loadSound("assets/Superbes_enregistrements/En_passant_pecho.mp3")
-    soundX = loadSound("assets/Superbes_enregistrements/TASCAM_0491.wav")
-    soundY = loadSound("assets/Superbes_enregistrements/TASCAM_0449.wav")
-    soundZ = loadSound("assets/Superbes_enregistrements/TASCAM_0448.wav")
-
-
-
-
-
-
+    soundA = loadSound("assets/blueslick1.wav")
+    soundB = loadSound("assets/andreas.wav")
+    soundC = loadSound("assets/blues_lick_2.wav")
+    soundD = loadSound("assets/blues_lick_3.wav")
+    soundE = loadSound("assets/rythm_wahwah.wav")
+    soundF = loadSound("assets/cuillere_looney.wav")
+    soundG = loadSound("assets/demi-barre.wav")
+    soundH = loadSound("assets/disco.wav")
+    soundI = loadSound("assets/echo_micro.wav")
+    soundJ = loadSound("assets/funky.wav")
+    soundK = loadSound("assets/gratte_cuillere.wav")
+    soundL = loadSound("assets/harmonique.wav")
+    soundM = loadSound("assets/jimi.wav")
+    soundN = loadSound("assets/jimi_doubletroll.wav")
+    soundO = loadSound("assets/jump_wah_wah.wav")
+    soundP = loadSound("assets/penta_mimin.wav")
+    soundQ = loadSound("assets/rebond_basse.wav")
+    soundR = loadSound("assets/retour_lick.wav")
+    soundS = loadSound("assets/slide_317.wav")
+    soundT = loadSound("assets/harmonique.wav") // son à changer
+    soundU = loadSound("assets/watchtower_lick.wav")
+    soundV = loadSound("assets/western.wav")
+    soundW = loadSound("assets/doublon-a_revoir.wav")
+    soundX = loadSound("assets/harmonique.wav") //so ) changer
+    soundY = loadSound("assets/harmonique.wav") //son à changer
+    soundZ = loadSound("assets/stevieRAY.wav")
 }
 
 function setup() {
@@ -85,7 +95,9 @@ function setup() {
     amplitudeA = new p5.Amplitude()
     amplitudeB = new p5.Amplitude()
     amplitudeD = new p5.Amplitude()
-    amplitudeK = new p5.Amplitude()
+    amplitudeP = new p5.Amplitude()
+     amplitudeO = new p5.Amplitude()
+    amplitudeI = new p5.Amplitude()
 
 
 
@@ -339,12 +351,13 @@ function animB() {
 
     amplitudeB.setInput(soundB)
     var levelB = amplitudeB.getLevel()
-    // console.log(levelB)
+    console.log(levelB)
 
-    var displayy = map(levelB, 0, 0.0025, 0, 100)
+
+    var displayy = map(levelB, 0, 0.04, 0, 100)
     pg.clear()
 
-    if (displayy > 70) { //conditon d'affichage : si amplitude sonore > 85 %
+    if (displayy > 85) { //conditon d'affichage : si amplitude sonore > 85 %
         biscottes.push(new biscotte())
     }
     for (var i = 0; i < biscottes.length; i++) {
@@ -360,6 +373,14 @@ function animB() {
 }
 
 function animC() {
+
+}
+
+function animD() {
+
+}
+
+function animE() { //sono depuis le coté gauche
     //rectangles qui tournent sur eux même sur fond jaune
     background(255, 255, 20)
     push()
@@ -377,41 +398,10 @@ function animC() {
     pop()
 }
 
-function animD() {
-
-}
-
-function animE() { //sono depuis le coté gauche
-    /* amplitude.setInput(sound5);
-     var sonoLevel = amplitude.getLevel()
-     print("level=" + sonoLevel)
-     var sono = map(sonoLevel, 0, 0.1, 0, 255);
-     print("couleursono" + sono)
-     for (var x = 0; x < height; x++) {
-         var noiseVal = noise(x * 0.05, height * 0.08);
-         var couleur = noiseVal * sono
-         stroke(couleur, couleur * random(0, 1), couleur * random(0, 5))
-         line(0, x, noiseVal * 700, x);
-     }*/
-}
-
 function animF() {
-    /* amplitude.setInput(sound6)
-    var sonAmp = amplitude.getLevel()
-    print("sonAMp=" + sonAmp)
-    var positionX = map(sonAmp, 0, 0.1, 0, width)
-    var positionY = map(sonAmp, 0, 0.1, 0, height)
-    for (i = 0; i < width; i++) { //height<width donc width condition de la boucle
-        push()
-        colorMode(HSB, 420, 120, 120)
-        stroke(20)
-        strokeWeight(2)
-        fill(random(0, 420), 120, 120)
-        ellipse(positionX, positionY, 30, 30)
-        ellipse(positionX * random(0.5, 1.3), positionY * random(0.5, 1.3), 20, 20) // pourquoi ça crée un gros paquet de points ?
-        pop()
-    }
-*/
+
+
+
     /*   transparence = 10
        push()
        noStroke()
@@ -440,26 +430,45 @@ function animG() {
 }
 
 function animH() {
-    background(255, 255, 20)
-    stroke(0)
-    strokeWeight(100)
+    noStroke()
+    fill(255)
 
-    for (i = 0; i < 8; i++) {
-        push()
-        line(width / 6 * i, height, (width / 6 * i) + 150, 0)
-        pop()
+    for (i = width / 10; i < 9 * (width / 10) + 1; i++) {
+        cordes.push(new spring())
+    }
+
+    for (var i = 0; i < cordes.length; i++) {
+        cordes[i].update(); // update biscotte transparency
+        cordes[i].display(); // draw new biscotte
+
     }
 
 }
 
 function animI() { //i
-    transparence = 100
-    background(220, 10, 2)
+    amplitudeI.setInput(soundI)
+    let levelI = amplitudeI.getLevel()
+    // console.log(levelI)
+    var length = map(levelI, 0, 0.01, 0, 5 * width / 10)
+
+    noStroke()
+    fill(255)
+    push()
+    translate(width / 2, 0)
+    //cacher la fin du son qui n'est plus audible
+    if (soundI.currentTime() < 7 * soundI.duration() / 10) {
+        for (i = 0; i < height; i++) {
+            ellipse(length, i, 10, 10)
+            ellipse(-length, i, 10, 10)
+        }
+        pop()
+    }
+
 }
 
 function animJ() { //j
     //jet de cocobilles
-    var t = map(sound10.currentTime(), 0, sound10.duration() * 0.60, 0, 1)
+    var t = map(soundJ.currentTime(), 0, soundJ.duration() * 0.60, 0, 1)
     t = constrain(t, 0, 1)
     noStroke()
     var xtarget = []
@@ -478,29 +487,22 @@ function animJ() { //j
         ellipse(x, y, 20, 20)
     }
     pop()
+
+
 }
 
 function animK() {
-    //pulupulu un escargot qui enappelle un autre
-    amplitudeK.setInput(soundK)
-    var levelK = amplitudeK.getLevel()
-    transparence = 10
-    var radius = map(levelK, 0, 0.1, 30, 150) //pour changer le radius des points
-    var point = 12
-    var currentPoint = map(soundK.currentTime(), 0, soundK.duration(), 0, point + 1)
-
-    push()
-    translate(0, height / 2)
-    for (i = 1; i < currentPoint + 1; i++) {
-        noStroke()
-        fill(5, 120, 0)
-        ellipse(i * width / 14, 0, radius, radius)
-    }
-    pop()
+      let t = map(soundK.currentTime(), 0, soundK.duration() * 0.75, 0, 1)
+   let before = lerp(width/6, 5 * width /6, t)
+   let after = map(soundK.currentTime(), 0, soundK.duration(), width/6, 5* width /6)
+   stroke(30,230,60)
+    strokeWeight(height/8)
+   line(before,height/2,after,height/2)
 }
 
 function animL() { //l
-
+    let transp = map(soundL.currentTime(), 0, soundL.duration() - 0.2, 100, 0)
+    background(96, 5, 180, transp)
 
 
 }
@@ -542,31 +544,64 @@ function animN() {
 }
 
 function animO() {
-    for (var i = 0; i <= 500; i++) {
-        // var angle = i * 24.0 * PI / 10000;
-        var angle = map(soundN.currentTime(), 0, soundN.duration(), 2, TWO_PI) * i / 8000
-        var x = cos(angle) * ((cos(angle)) - 20 * cos(4 * angle) - pow(sin(angle / 4), 15)) * 40
-        var y = sin(angle) * ((cos(angle)) - 20 * cos(4 * angle) - pow(sin(angle / 4), 15)) * 40
-        var a = cos(angle) * ((cos(angle)) - 60 * cos(4 * angle) - pow(sin(angle / 4), 15)) * 40
-        var b = sin(angle) * ((cos(angle)) - 60 * cos(4 * angle) - pow(sin(angle / 4), 15)) * 40
-        var w = cos(angle) * ((cos(angle)) - 10 * cos(4 * angle) - pow(sin(angle / 4), 15)) * 40
-        var z = sin(angle) * ((cos(angle)) - 10 * cos(4 * angle) - pow(sin(angle / 4), 15)) * 40
-        stroke(255, 15)
-        push()
-        rotate(i / 210)
-        triangle(x, y, a, b, w, z)
-        pop()
-    }
-    pop()
+    //circle morph
+    fill(220,0,30)
+    noStroke()
+//   strokeWeight(2)
+   
+    let haut = amplitudeO.setInput(soundO)
+    var levelO = amplitudeO.getLevel()
+     amppY += 0.05
+    amppX += 0.03
+    let radiusX = map(levelO, 0, 0.1, 30, 350) * cos(amppX)
+    let radiusY = map(levelO, 0, 0.1, 30, 350) * cos(amppY)
+     
+    ellipse(width / 2, height / 2, radiusX,radiusY)
 
 }
 
 function animP() {
+ //pulupulu un escargot qui enappelle un autre
+    amplitudeP.setInput(soundP)
+    var levelP = amplitudeP.getLevel()
+    transparence = 10
+    var radius = map(levelP, 0, 0.1, 30, 150) //pour changer le radius des points
+    var point = 12
+    var currentPoint = map(soundP.currentTime(), 0, soundP.duration(), 0, point + 1)
 
+    push()
+    translate(0, height / 2)
+    for (i = 1; i < currentPoint + 1; i++) {
+        noStroke()
+        fill(5, 120, 0)
+        ellipse(i * width / 14, 0, radius, radius)
+    }
+    pop()
 }
 
 function animQ() {
+  /*  t = map(soundQ.currentTime(), 0, soundQ.duration(), 0, 20)
+    angleQ += speedQ * t
+    var sinval = sin(angleQ)
+    var cosval = cos(angleQ)
+    var positions = {
+       posQx :(width / 5) ,
+       posQy :(5*height/6 ) 
+    }
+    fill(220, 220, 30)
+    noStroke()
 
+
+    var elasticity = anime.timeline();
+    elasticity.add({
+        targets: positions,
+        posQx:5*width/6,
+        posQy:width/6,
+        offset: 0,
+        duration: 3000,
+        elasticity: 300,
+    })
+        ellipse(positions.posQx, positions.posQy, 50, 50)*/
 }
 
 function animR() {
@@ -633,7 +668,18 @@ function animW() { //u
 }
 
 function animX() {
-
+     sizeX += 0.05
+     sizeY += 0.07
+    
+    //pour garder une animation smooth même sur écran grand
+    let taillemax
+    if(taillemax<250) tailemax = (width/2)
+    else taillemax = 250
+    
+    noFill()
+    stroke(220,0,30)
+    strokeWeight(2)
+ellipse(width/2,height/2,cos(sizeX)*taillemax,cos(sizeY)*taillemax)
 }
 
 function animY() {
