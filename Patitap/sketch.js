@@ -2,6 +2,7 @@ var amplitudeA;
 var amplitudeB;
 var amplitudeD;
 var amplitudeK
+var amplitudeF
 
 var levelA
 var levelB
@@ -54,15 +55,15 @@ var radiusQ = 50
 
 //x
 var sizeX = 0
-var sizeY =0
+var sizeY = 0
 
 function preload() {
     soundA = loadSound("assets/blueslick1.wav")
-    soundB = loadSound("assets/andreas.wav")
-    soundC = loadSound("assets/blues_lick_2.wav")
+    soundB = loadSound("assets/bbking_loop_jazzy.wav")
+    soundC = loadSound("assets/merlin.wav")
     soundD = loadSound("assets/blues_lick_3.wav")
     soundE = loadSound("assets/rythm_wahwah.wav")
-    soundF = loadSound("assets/cuillere_looney.wav")
+    soundF = loadSound("assets/feutre.wav")
     soundG = loadSound("assets/demi-barre.wav")
     soundH = loadSound("assets/disco.wav")
     soundI = loadSound("assets/echo_micro.wav")
@@ -70,7 +71,7 @@ function preload() {
     soundK = loadSound("assets/gratte_cuillere.wav")
     soundL = loadSound("assets/harmonique.wav")
     soundM = loadSound("assets/jimi.wav")
-    soundN = loadSound("assets/jimi_doubletroll.wav")
+    soundN = loadSound("assets/j.bonamassa_lick.wav")
     soundO = loadSound("assets/jump_wah_wah.wav")
     soundP = loadSound("assets/penta_mimin.wav")
     soundQ = loadSound("assets/rebond_basse.wav")
@@ -79,9 +80,9 @@ function preload() {
     soundT = loadSound("assets/harmonique.wav") // son à changer
     soundU = loadSound("assets/watchtower_lick.wav")
     soundV = loadSound("assets/western.wav")
-    soundW = loadSound("assets/doublon-a_revoir.wav")
-    soundX = loadSound("assets/harmonique.wav") //so ) changer
-    soundY = loadSound("assets/harmonique.wav") //son à changer
+    soundW = loadSound("assets/fin.wav")
+    soundX = loadSound("assets/saute_de_veau.wav") //so ) changer
+    soundY = loadSound("assets/western.wav") //son à changer
     soundZ = loadSound("assets/stevieRAY.wav")
 }
 
@@ -95,8 +96,8 @@ function setup() {
     amplitudeA = new p5.Amplitude()
     amplitudeB = new p5.Amplitude()
     amplitudeD = new p5.Amplitude()
-    amplitudeP = new p5.Amplitude()
-     amplitudeO = new p5.Amplitude()
+    amplitudeF = new p5.Amplitude()
+    amplitudeO = new p5.Amplitude()
     amplitudeI = new p5.Amplitude()
 
 
@@ -354,10 +355,10 @@ function animB() {
     console.log(levelB)
 
 
-    var displayy = map(levelB, 0, 0.04, 0, 100)
+    var displayy = map(levelB, 0, 0.12, 0, 100)
     pg.clear()
 
-    if (displayy > 85) { //conditon d'affichage : si amplitude sonore > 85 %
+    if (displayy > 80) { //conditon d'affichage : si amplitude sonore > 85 %
         biscottes.push(new biscotte())
     }
     for (var i = 0; i < biscottes.length; i++) {
@@ -377,7 +378,19 @@ function animC() {
 }
 
 function animD() {
-
+       t = map(soundD.currentTime(), 0, soundD.duration(), 0, 20)
+    angleL += speedL * t
+    var sinval = sin(angleL)
+    var cosval = cos(angleL)
+    var x = (width / 2) + (cosval * radiusL)
+    var y = (height / 2) + (sinval * radiusL)
+    var x2 = x + cos(angleL * sx) * radiusL / 2
+    var y2 = y + sin(angleL * sy) * radiusL / 2
+    fill(255)
+    noStroke()
+    rect(x, y, 25, 25, 2)
+    fill(225, 0, 0)
+    rect(x2, y2, 25, 25, 2)
 }
 
 function animE() { //sono depuis le coté gauche
@@ -399,25 +412,22 @@ function animE() { //sono depuis le coté gauche
 }
 
 function animF() {
+    //pulupulu un escargot qui enappelle un autre
+    amplitudeF.setInput(soundF)
+    var levelF = amplitudeF.getLevel()
+    transparence = 10
+    var radius = map(levelF, 0, 0.1, 30, 150) //pour changer le radius des points
+    var point = 12
+    var currentPoint = map(soundF.currentTime(), 0, soundF.duration(), 0, point + 1)
 
-
-
-    /*   transparence = 10
-       push()
-       noStroke()
-       fill(255)
-       arc(0, 0, i * 10, i * 10, 0 + PI, CHORD)
-       for (i = 1; i < 18; i++) {
-
-           push()
-           // var angle = height / sqrt(pow(width, 2) + pow(height, 2))
-           arc(0, 0, i * 10, i * 10, 0 + PI, CHORD)
-           pop()
-           translate(i * width / 60, i * height / 60)
-           arc(50, 50, 80, 80, 0, PI + QUARTER_PI, CHORD)
-       }
-
-       pop()*/
+    push()
+    translate(0, height / 2)
+    for (i = 1; i < currentPoint + 1; i++) {
+        noStroke()
+        fill(5, 120, 0)
+        ellipse(i * width / 14, 0, radius, radius)
+    }
+    pop()
 }
 
 function animG() {
@@ -492,39 +502,45 @@ function animJ() { //j
 }
 
 function animK() {
-      let t = map(soundK.currentTime(), 0, soundK.duration() * 0.75, 0, 1)
-   let before = lerp(width/6, 5 * width /6, t)
-   let after = map(soundK.currentTime(), 0, soundK.duration(), width/6, 5* width /6)
-   stroke(30,230,60)
-    strokeWeight(height/8)
-   line(before,height/2,after,height/2)
+    let t = map(soundK.currentTime(), 0, soundK.duration() * 0.75, 0, 1)
+    let before = lerp(width / 6, 5 * width / 6, t)
+    let after = map(soundK.currentTime(), 0, soundK.duration(), width / 6, 5 * (width / 6))
+    stroke(30, 120, 60)
+    strokeWeight(height / 8)
+    line(before, height / 2, after, height / 2)
 }
 
 function animL() { //l
     let transp = map(soundL.currentTime(), 0, soundL.duration() - 0.2, 100, 0)
     background(96, 5, 180, transp)
-
-
 }
 
 function animM() {
-    t = map(soundM.currentTime(), 0, soundM.duration(), 0, 20)
-    angleL += speedL * t
-    var sinval = sin(angleL)
-    var cosval = cos(angleL)
-    var x = (width / 2) + (cosval * radiusL)
-    var y = (height / 2) + (sinval * radiusL)
-    var x2 = x + cos(angleL * sx) * radiusL / 2
-    var y2 = y + sin(angleL * sy) * radiusL / 2
-    fill(255)
-    noStroke()
-    rect(x, y, 25, 25, 2)
-    fill(225, 0, 0)
-    rect(x2, y2, 25, 25, 2)
+    
+    push()
+     let radius;
+    if(width<height) radius =  width/3
+    else radius = height/3
+    
+    stroke(255)
+    strokeWeight(5)
+    noFill()
+    strokeJoin(ROUND)
+    let mod = map(soundM.currentTime(), 0, soundM.duration(), TWO_PI, 0.001)
+    
+    translate(width / 2, height / 2)
+    beginShape();
+    for (i = 0; i < TWO_PI; i += mod) {
+        let x = radius * cos(i);
+        let y = radius * sin(i);
+        vertex(x, y);
+    }
+    endShape(CLOSE);
+    pop()
+
 }
 
 function animN() {
-    //pas en accord avec l'anim mais carrément stylé
     // randomSeed(455)
     push()
     translate(width / 2, height / 2)
@@ -545,63 +561,48 @@ function animN() {
 
 function animO() {
     //circle morph
-    fill(220,0,30)
+
+    fill(220, 0, 30)
     noStroke()
-//   strokeWeight(2)
-   
+    //   strokeWeight(2)
+
     let haut = amplitudeO.setInput(soundO)
     var levelO = amplitudeO.getLevel()
-     amppY += 0.05
+    amppY += 0.05
     amppX += 0.03
     let radiusX = map(levelO, 0, 0.1, 30, 350) * cos(amppX)
     let radiusY = map(levelO, 0, 0.1, 30, 350) * cos(amppY)
-     
-    ellipse(width / 2, height / 2, radiusX,radiusY)
 
+    ellipse(width / 2, height / 2, radiusX, radiusY)
 }
 
 function animP() {
- //pulupulu un escargot qui enappelle un autre
-    amplitudeP.setInput(soundP)
-    var levelP = amplitudeP.getLevel()
-    transparence = 10
-    var radius = map(levelP, 0, 0.1, 30, 150) //pour changer le radius des points
-    var point = 12
-    var currentPoint = map(soundP.currentTime(), 0, soundP.duration(), 0, point + 1)
 
-    push()
-    translate(0, height / 2)
-    for (i = 1; i < currentPoint + 1; i++) {
-        noStroke()
-        fill(5, 120, 0)
-        ellipse(i * width / 14, 0, radius, radius)
-    }
-    pop()
 }
 
 function animQ() {
-  /*  t = map(soundQ.currentTime(), 0, soundQ.duration(), 0, 20)
-    angleQ += speedQ * t
-    var sinval = sin(angleQ)
-    var cosval = cos(angleQ)
-    var positions = {
-       posQx :(width / 5) ,
-       posQy :(5*height/6 ) 
-    }
-    fill(220, 220, 30)
-    noStroke()
+    /*  t = map(soundQ.currentTime(), 0, soundQ.duration(), 0, 20)
+      angleQ += speedQ * t
+      var sinval = sin(angleQ)
+      var cosval = cos(angleQ)
+      var positions = {
+         posQx :(width / 5) ,
+         posQy :(5*height/6 ) 
+      }
+      fill(220, 220, 30)
+      noStroke()
 
 
-    var elasticity = anime.timeline();
-    elasticity.add({
-        targets: positions,
-        posQx:5*width/6,
-        posQy:width/6,
-        offset: 0,
-        duration: 3000,
-        elasticity: 300,
-    })
-        ellipse(positions.posQx, positions.posQy, 50, 50)*/
+      var elasticity = anime.timeline();
+      elasticity.add({
+          targets: positions,
+          posQx:5*width/6,
+          posQy:width/6,
+          offset: 0,
+          duration: 3000,
+          elasticity: 300,
+      })
+          ellipse(positions.posQx, positions.posQy, 50, 50)*/
 }
 
 function animR() {
@@ -650,36 +651,37 @@ function animV() {
 
 }
 
-function animW() { //u
-    push()
-    var t = map(soundM.currentTime(), 0, soundM.duration() * 0.75, 0, 1)
-    var size = 150 * random(0.6, 1.5)
-    xtarget = random(width / 2, width + 150)
-    ytarget = random(-200, height / 2)
-    t = constrain(t, 0, 1)
+function animW() {
+    var distX = 6 * width / 8
+    var distY = 6 * height / 7
+    let progress = map(soundW.currentTime(), 0, soundW.duration() - 1.5, 0, 1)
+
+    fill(25, 50, 206);
     noStroke()
-    fill(220, 220, 3)
-    var x = lerp(xpos, xtarget, t)
-    var y = lerp(ypos, ytarget, t)
-    ellipse(x, y, 150, size)
-
-    pop()
-
+    if (progress < 1) {
+        var x = (width / 8) + progress * distX;
+        var y = (height / 7) + pow(progress, 8) * distY;
+    }
+    ellipse(x, y, 50, 50);
 }
 
+
+
+
+
 function animX() {
-     sizeX += 0.05
-     sizeY += 0.07
-    
+    sizeX += 0.05
+    sizeY += 0.07
+
     //pour garder une animation smooth même sur écran grand
     let taillemax
-    if(taillemax<250) tailemax = (width/2)
+    if (taillemax < 250) tailemax = (width / 2)
     else taillemax = 250
-    
+
     noFill()
-    stroke(220,0,30)
+    stroke(220, 0, 30)
     strokeWeight(2)
-ellipse(width/2,height/2,cos(sizeX)*taillemax,cos(sizeY)*taillemax)
+    ellipse(width / 2, height / 2, cos(sizeX) * taillemax, cos(sizeY) * taillemax)
 }
 
 function animY() {
