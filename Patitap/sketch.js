@@ -3,6 +3,10 @@ var amplitudeB;
 var amplitudeD;
 var amplitudeK
 var amplitudeF
+var amplitudeE
+var amplitudeZ
+
+var soundAFFT
 
 var levelA
 var levelB
@@ -17,6 +21,8 @@ var cordes = []
 //l
 var cerclesConfiance = []
 
+//e
+var pgE
 
 var timeStart
 var timeAnim
@@ -57,14 +63,19 @@ var radiusQ = 50
 var sizeX = 0
 var sizeY = 0
 
+var palette = []
+
+
+
+
 function preload() {
-    soundA = loadSound("assets/blueslick1.wav")
-    soundB = loadSound("assets/bbking_loop_jazzy.wav")
+    soundA = loadSound("assets/mannishboy_riff.wav")
+    soundB = loadSound("assets/blueslick1.wav")
     soundC = loadSound("assets/merlin.wav")
     soundD = loadSound("assets/blues_lick_3.wav")
-    soundE = loadSound("assets/rythm_wahwah.wav")
+    soundE = loadSound("assets/bbking_loop_jazzy.wav")
     soundF = loadSound("assets/feutre.wav")
-    soundG = loadSound("assets/demi-barre.wav")
+    soundG = loadSound("assets/blues_double.wav")
     soundH = loadSound("assets/disco.wav")
     soundI = loadSound("assets/echo_micro.wav")
     soundJ = loadSound("assets/funky.wav")
@@ -73,16 +84,16 @@ function preload() {
     soundM = loadSound("assets/jimi.wav")
     soundN = loadSound("assets/j.bonamassa_lick.wav")
     soundO = loadSound("assets/jump_wah_wah.wav")
-    soundP = loadSound("assets/penta_mimin.wav")
+    soundP = loadSound("assets/rythm_wahwah.wav")
     soundQ = loadSound("assets/rebond_basse.wav")
     soundR = loadSound("assets/retour_lick.wav")
     soundS = loadSound("assets/slide_317.wav")
-    soundT = loadSound("assets/harmonique.wav") // son à changer
+    soundT = loadSound("assets/harmonique.wav")
     soundU = loadSound("assets/watchtower_lick.wav")
     soundV = loadSound("assets/western.wav")
     soundW = loadSound("assets/fin.wav")
-    soundX = loadSound("assets/saute_de_veau.wav") //so ) changer
-    soundY = loadSound("assets/western.wav") //son à changer
+    soundX = loadSound("assets/saute_de_veau.wav")
+    soundY = loadSound("assets/western.wav")
     soundZ = loadSound("assets/stevieRAY.wav")
 }
 
@@ -99,10 +110,24 @@ function setup() {
     amplitudeF = new p5.Amplitude()
     amplitudeO = new p5.Amplitude()
     amplitudeI = new p5.Amplitude()
+    amplitudeE = new p5.Amplitude()
+    amplitudeZ = new p5.Amplitude()
+
+    soundAFFT = new p5.FFT(0.8, 16)
+    soundAFFT.setInput(soundA)
 
 
+    palette[0] = color(154, 202, 62)
+    palette[1] = color(151, 71, 140)
+    palette[2] = color(212, 42, 41)
+    palette[3] = color(252, 217, 76)
+    palette[4] = color(74, 184, 219)
+    palette[5] = color(255, 140, 231)
+    palette[6] = color(193, 115, 15)
 
-
+    /* for (var i = 0; i < 4000; i++) {
+      agents[i] = new Agent();
+    }*/
 
     xpos = 200
     ypos = 7 * height / 8
@@ -117,6 +142,8 @@ function setup() {
     Yrect = 0.203804 * height //reponsive !
     pg = createGraphics(width, height)
 
+    pgE = createGraphics(width, height)
+
 
     //pour animI
     position1 = createVector(0, 0)
@@ -124,7 +151,7 @@ function setup() {
     velocity = p5.Vector.random2D()
     velocity.mult(4)
 
-    //anim 3 pour faire pivoter plusieurs objets en même temps
+    //anim pour faire pivoter plusieurs objets en même temps
     NUMSINES = 20; // how many of these things can we do at once?
     fund = 0.005; // the speed of the central sine    
     rad = height / 4; // compute radius for central circle
@@ -325,11 +352,51 @@ function windowResized() {
     background(0)
 }
 
+//for color palette, inspired by @GotoLoop, sketch online at https://forum.processing.org/two/discussion/17621/array-of-colors#Item_1
 function animA() {
-    amplitudeA.setInput(soundA)
-    var levelA = amplitudeA.getLevel()
-    var seuil = map(levelA, 0, 0.025757474504161826, 0, 100)
-    var pasCurrent = map(soundA.currentTime(), 0, soundA.duration(), 0, 30)
+    push()
+
+    soundAFFT.analyze()
+    let basses = soundAFFT.getEnergy("bass")
+    // console.log(basses)
+    translate(width / 2, height / 2)
+
+    let angle = TWO_PI / 80
+
+
+    for (let j = 0; j < height / 2; j = j + 40) {
+        push()
+        rotate(random(j))
+        noFill()
+        strokeWeight(40)
+        strokeCap(SQUARE)
+        stroke(palette[random(6)])
+        console.log(palette[random(6)])
+
+        let direction = int(random(0, 2) < 1) ? 1 : -1
+
+        push()
+        if (basses > 225) rotate(map(basses, 0, 255, PI / 8, TWO_PI) * direction)
+        beginShape()
+        for (let i = 0; i < 72; i++) {
+            let x = (cos(angle * i) * ((height / 2) - j))
+            let y = (sin(angle * i) * ((height / 2) - j))
+            vertex(x, y)
+        }
+        endShape()
+        pop()
+    }
+    pop()
+}
+
+
+
+function animB() {
+
+    amplitudeB.setInput(soundB)
+    var levelB = amplitudeB.getLevel()
+    var seuil = map(levelB, 0, 0.025757474504161826, 0, 100)
+    var pasCurrent = map(soundB.currentTime(), 0, soundB.duration(), 0, 30)
 
     for (var i = 0; i < pasCurrent; i++) {
         push()
@@ -345,31 +412,6 @@ function animA() {
         pop()
     }
 
-}
-
-
-function animB() {
-
-    amplitudeB.setInput(soundB)
-    var levelB = amplitudeB.getLevel()
-    console.log(levelB)
-
-
-    var displayy = map(levelB, 0, 0.12, 0, 100)
-    pg.clear()
-
-    if (displayy > 80) { //conditon d'affichage : si amplitude sonore > 85 %
-        biscottes.push(new biscotte())
-    }
-    for (var i = 0; i < biscottes.length; i++) {
-        biscottes[i].update(); // update biscotte transparency
-        biscottes[i].display(pg); // draw new biscotte
-        if (biscottes[i].transparence < 5) {
-            biscottes = biscottes.splice(i)
-        }
-    }
-    image(pg, 0, 0, width, height)
-
 
 }
 
@@ -378,7 +420,7 @@ function animC() {
 }
 
 function animD() {
-       t = map(soundD.currentTime(), 0, soundD.duration(), 0, 20)
+    t = map(soundD.currentTime(), 0, soundD.duration(), 0, 20)
     angleL += speedL * t
     var sinval = sin(angleL)
     var cosval = cos(angleL)
@@ -393,20 +435,37 @@ function animD() {
     rect(x2, y2, 25, 25, 2)
 }
 
-function animE() { //sono depuis le coté gauche
-    //rectangles qui tournent sur eux même sur fond jaune
-    background(255, 255, 20)
+//inspirée d'un sketch Pde tiré du bouquin "DEsign Generatif" de H. Bohnacker, B. Grob, J. Laub, et C. Lazzeroni publié par Pyramid
+function animE() {
     push()
-    rectMode(CENTER)
-    for (var i = 0; i < 25; i++) {
-        push()
-        noStroke()
-        fill(random(80), random(250), random(255))
-        translate(random(width), random(height))
-        rotate(frameCount / 10 + i)
-        rect(0, 0, 200, 50, 10)
-        pop()
+    amplitudeE.setInput(soundE)
+    var levelE = amplitudeE.getLevel()
+    // console.log(levelE)
 
+    translate(width / 2, height / 2)
+    let vertices = map(levelE, 0, 0.19, 2, 60)
+    let nbcircles = 80 // map (soundE.currentTime(),0,soundE.duration(),0,200)
+    let angle = TWO_PI / vertices
+
+
+    noFill()
+    strokeWeight(1)
+    stroke(156, 120, 10, 255)
+
+
+    for (let j = 0; j < nbcircles; j++) {
+        let radius
+        if (j > 40) radius = j / 35
+        else radius = j / 40
+
+        stroke(156, 120, 10, nbcircles)
+        beginShape()
+        for (let i = 0; i < vertices; i++) {
+            let x = (cos(angle * i) * ((height / 2) - 100)) / radius
+            let y = (sin(angle * i) * ((height / 2) - 100)) / radius
+            vertex(x, y)
+        }
+        endShape(CLOSE)
     }
     pop()
 }
@@ -440,33 +499,22 @@ function animG() {
 }
 
 function animH() {
-    noStroke()
-    fill(255)
 
-    for (i = width / 10; i < 9 * (width / 10) + 1; i++) {
-        cordes.push(new spring())
-    }
-
-    for (var i = 0; i < cordes.length; i++) {
-        cordes[i].update(); // update biscotte transparency
-        cordes[i].display(); // draw new biscotte
-
-    }
 
 }
 
 function animI() { //i
     amplitudeI.setInput(soundI)
     let levelI = amplitudeI.getLevel()
-    // console.log(levelI)
-    var length = map(levelI, 0, 0.01, 0, 5 * width / 10)
+    console.log(levelI)
+    var length = map(levelI, 0, 0.042, 0, width / 10)
 
     noStroke()
     fill(255)
     push()
     translate(width / 2, 0)
     //cacher la fin du son qui n'est plus audible
-    if (soundI.currentTime() < 7 * soundI.duration() / 10) {
+    if (soundI.currentTime() < soundI.duration()) {
         for (i = 0; i < height; i++) {
             ellipse(length, i, 10, 10)
             ellipse(-length, i, 10, 10)
@@ -516,18 +564,18 @@ function animL() { //l
 }
 
 function animM() {
-    
+
     push()
-     let radius;
-    if(width<height) radius =  width/3
-    else radius = height/3
-    
+    let radius;
+    if (width < height) radius = width / 3
+    else radius = height / 3
+
     stroke(255)
     strokeWeight(5)
     noFill()
     strokeJoin(ROUND)
     let mod = map(soundM.currentTime(), 0, soundM.duration(), TWO_PI, 0.001)
-    
+
     translate(width / 2, height / 2)
     beginShape();
     for (i = 0; i < TWO_PI; i += mod) {
@@ -574,10 +622,25 @@ function animO() {
     let radiusY = map(levelO, 0, 0.1, 30, 350) * cos(amppY)
 
     ellipse(width / 2, height / 2, radiusX, radiusY)
+
 }
 
 function animP() {
+    //rectangles qui tournent sur eux même sur fond jaune
+    background(255, 255, 20)
+    push()
+    rectMode(CENTER)
+    for (var i = 0; i < 25; i++) {
+        push()
+        noStroke()
+        fill(random(80), random(250), random(255))
+        translate(random(width), random(height))
+        rotate(frameCount / 10 + i)
+        rect(0, 0, 200, 50, 10)
+        pop()
 
+    }
+    pop()
 }
 
 function animQ() {
@@ -690,6 +753,27 @@ function animY() {
 
 
 function animZ() {
+    amplitudeZ.setInput(soundZ)
+    var levelZ = amplitudeZ.getLevel()
+    //console.log(levelZ)
 
+
+    var displayy = map(levelZ, 0, 0.072, 0, 100)
+    pg.clear()
+
+    if (displayy > 25) { //conditon d'affichage : si amplitude sonore > 85 %
+        biscottes.push(new biscotte())
+        console.log("neew")
+    }
+    console.log(biscottes.length)
+    for (let i = 0; i < biscottes.length; i++) {
+
+        biscottes[i].update(); // update biscotte transparency
+        biscottes[i].display(pg); // draw new biscotte
+        if (biscottes[i].transparence < 5) {
+            biscottes = biscottes.splice(i)
+        }
+    }
+    image(pg, 0, 0, width, height)
 
 }
