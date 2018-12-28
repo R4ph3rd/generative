@@ -70,6 +70,10 @@ var palette = []
 var randomColor
 var colorsCircles = []
 
+//c
+var springs = [] 
+
+
 
 function preload() {
     soundA = loadSound("assets/mannishboy_riff.wav")
@@ -130,10 +134,8 @@ function setup() {
     palette[4] = color(74, 184, 219)
     palette[5] = color(255, 140, 231)
     palette[6] = color(30, 25, 106)
-    //palette[6] = color(193, 115, 15)
     palette[7] = color(241, 101, 39)
-    //palette[9] = color(182,236,218)
-    //   palette[10] = color(190,255,127)
+
 
 
     xpos = 200
@@ -165,9 +167,7 @@ function setup() {
     for (var i = 0; i < sines.length; i++) {
         sines[i] = PI; // start EVERYBODY facing NORTH
     }
-
 }
-
 
 function draw() {
     randomSeed(seed);
@@ -388,6 +388,7 @@ function animA() {
         push()
         if (basses > 225) rotate(map(basses, 0, 255, PI / 8, TWO_PI) * direction)
         beginShape()
+
         for (let i = 0; i < 72; i++) {
             let x = (cos(angle * i) * ((height / 2) - j))
             let y = (sin(angle * i) * ((height / 2) - j))
@@ -470,25 +471,24 @@ function animB() {
 
 }
 
+//suite de boules tirées par un effet elastique proportionnel au son
 function animC() {
     push()
     soundCFFT.analyze()
-    let middle = soundCFFT.getEnergy("highMid")
-    let middleAngle = map(middle, 0, 200, 0, TWO_PI)
-    // console.log("middleX = " +middleX)
-    for (var i = 0; i <= 600; i++) {
-        let angle = map(i, 0, 600, 0, TWO_PI)
-        var oscYx = width / 2 - 25 + (angle) % 1 * (width / 2 - 2 * 25);
-        var oscXy = height / 2 - 25 + (angle) % 1 * (height / 2 - 2 * 25);
+    let middle = soundCFFT.getEnergy("mid")
+    let middleSpring = map(middle, 0, 200, 0,400)
+     console.log("middle = " +middle)
+    stroke(255)
+    strokeWeight(2)
+    let timeline = map(soundC.currentTime(),0,soundC.duration(), 50, width - 50)
+    
+  if(middle > 125) springs. push(new Spring(timeline, height/2, 15, 0.98, 8.0, 0.1))
 
-        // let x = (width / 2) + (sin(middleX + TWO_PI) * 300)
-        //    let y = (height / 2) + (sin(middleY) * 300)
-        pgC.fill(255)
-        pgC.noStroke()
-        pgC.ellipse(oscYx, oscXy, 10, 10)
-        image(pgC, 0, 0, width, height)
-        pop()
-    }
+   
+  for (var i = 0; i < springs.length ; i++) { 
+    springs[i].update(); 
+    springs[i].display();
+  }
 }
 
 function animD() {
@@ -813,7 +813,7 @@ function animZ() {
 
     if (displayy > 25) { //conditon d'affichage : si amplitude sonore > 85 %
         biscottes.push(new biscotte())
-        console.log("neew")
+       // console.log("neew")
     }
     console.log(biscottes.length)
     for (let i = 0; i < biscottes.length; i++) {
