@@ -125,7 +125,7 @@ function setup() {
     soundCFFT = new p5.FFT(0.8, 16)
     soundCFFT.setInput(soundC)
 
-
+    //for color palette, helped by a sketch of @GotoLoop, sketch online at https://forum.processing.org/two/discussion/17621/array-of-colors#Item_1
     palette[0] = color(154, 202, 62)
     palette[1] = color(151, 71, 140)
     palette[2] = color(212, 42, 41)
@@ -358,7 +358,7 @@ function windowResized() {
     background(0)
 }
 
-//for color palette, helped by @GotoLoop, sketch online at https://forum.processing.org/two/discussion/17621/array-of-colors#Item_1
+
 function animA() {
     push()
 
@@ -367,11 +367,13 @@ function animA() {
     // console.log(basses)
     translate(width / 2, height / 2)
 
+    //select only 4 colors in the palette available
     let angle = TWO_PI / 80
     for (let i = 0; i < 4; i++) {
         colorsCircles[i] = random(palette)
     }
 
+    //define one color + angle per circle, sometimes many side by side can be of the same color
     for (let j = 0; j < height / 2; j = j + 40) {
         randomColor = random(colorsCircles);
 
@@ -382,12 +384,13 @@ function animA() {
         strokeCap(SQUARE)
         stroke(randomColor)
 
+        //change their position proportionally to the bass freq with randomly direction
         let direction = int(random(0, 2) < 1) ? 1 : -1
 
         push()
         if (basses > 225) rotate(map(basses, 0, 255, PI / 8, TWO_PI) * direction)
+        //display circles
         beginShape()
-
         for (let i = 0; i < 72; i++) {
             let x = (cos(angle * i) * ((height / 2) - j))
             let y = (sin(angle * i) * ((height / 2) - j))
@@ -397,6 +400,7 @@ function animA() {
         pop()
     }
     pop()
+    pop()
 }
 
 
@@ -404,10 +408,9 @@ function animA() {
 function animB() {
     push()
     rectMode(CENTER)
-    transparence = 10
     amplitudeB.setInput(soundB)
     let levelB = amplitudeB.getLevel()
-    console.log(levelB)
+   // console.log(levelB)
     let seuil = map(levelB, 0, 0.04188412655659618, 0, 100)
     //retrecissement du rect interne par rapport à l'amp
     let miniX = map(levelB, 0, 0.04188412655659618, 50, 5)
@@ -439,7 +442,9 @@ function animB() {
         stroke(255, 38 * i, 0)
         rect(posXdroite, posYdroite, 50 + maxX, 180 + maxY, 10)
         rect(posXgauche, posYgauche, 50 + maxX, 180 + maxY, 10)
-        if (seuil > 60) {
+        
+        //display vibrating rectangles only f the sound exceed 60 %
+        if (seuil > 50) {
             for (let i = 0; i < minicoin; i++) {
                 rect(posXdroite, posYdroite, miniX, miniY, minicoin)
                 rect(posXgauche, posYgauche, miniX, miniY, minicoin)
@@ -448,26 +453,6 @@ function animB() {
     }
     pop()
     pop()
-    /*  amplitudeB.setInput(soundB)
-    var levelB = amplitudeB.getLevel()
-    var seuil = map(levelB, 0, 0.025757474504161826, 0, 100)
-    var pasCurrent = map(soundB.currentTime(), 0, soundB.duration(), 0, 30)
-
-    for (var i = 0; i < pasCurrent; i++) {
-        push()
-        translate(width / 2, 0)
-        noStroke()
-        fill(150, 0, 20)
-
-        var angle = map(i, 0, 29, 0, -TWO_PI);
-        var x = height * -0.45 * cos(angle);
-        var y = height * 0.5 + height * -0.45 * sin(angle);
-
-        ellipse(x, y, 50, 50)
-        pop()
-    }
-*/
-
 }
 
 //suite de boules tirées par un effet elastique proportionnel au son
@@ -479,7 +464,7 @@ function animC() {
     console.log(middle)
     let middleSpring = map(middle, 105, 249, -(height / 4), height / 4)
     let timeline = map(soundC.currentTime(), 0, soundC.duration(), 50, width - 50)
-    //add new spring for each overpassing of the energy of the range of freq
+    //add new spring for each excess of the energy of the range of freq
     if (middle > 105) springs.push(new Spring(timeline, middle, middleSpring))
 
     for (var i = 0; i < springs.length; i++) {
@@ -627,14 +612,19 @@ function animJ() { //j
 
 }
 
+//la course des pôles d'une ligne !
 function animK() {
-    let t = map(soundK.currentTime(), 0, soundK.duration() * 0.75, 0, 1)
+    push()
+    let t = map(soundK.currentTime(), 0, soundK.duration() * 0.75, 0, 1) * 1.4
+    t = constrain(t, 0, 1)
     let before = lerp(width / 6, 5 * width / 6, t)
-    let after = map(soundK.currentTime(), 0, soundK.duration(), width / 6, 5 * (width / 6))
-    stroke(30, 120, 60)
+    let after = map(soundK.currentTime(), 0, soundK.duration(), width / 8, 5 * (width / 6)) // départ plus proche du bord pour éviter l'impression de décentrage
+    stroke(12, 171, 181)
     strokeWeight(height / 8)
+    strokeCap(SQUARE)
     noFill()
     line(before, height / 2, after, height / 2)
+    pop()
 }
 
 function animL() { //l
@@ -671,7 +661,7 @@ function animN() {
     // randomSeed(455)
     push()
     translate(width / 2, height / 2)
-    for (var i = 0; i <= 10000; i++) {
+    for (var i = 0; i <= 6000; i++) {
         // var angle = i * 24.0 * PI / 10000;
         var angle = map(soundN.currentTime(), 0, soundN.duration(), 2, TWO_PI * 2) * i / 4000
         var x = cos(angle) * ((cos(angle)) - 10 * cos(4 * angle) - pow(sin(angle / 4), 15)) * 40
@@ -775,7 +765,7 @@ function animW() {
     var distY = 6 * height / 7
     let progress = map(soundW.currentTime(), 0, soundW.duration() - 1.5, 0, 1)
 
-    fill(25, 50, 206);
+    fill(90,100,187);
     noStroke()
     if (progress < 1) {
         var x = (width / 8) + progress * distX;
@@ -821,7 +811,7 @@ function animZ() {
         biscottes.push(new biscotte())
         // console.log("neew")
     }
-    console.log(biscottes.length)
+   // console.log(biscottes.length)
     for (let i = 0; i < biscottes.length; i++) {
 
         biscottes[i].update(); // update biscotte transparency
