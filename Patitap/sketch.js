@@ -170,7 +170,7 @@ function setup() {
 
 function draw() {
     randomSeed(seed);
-    background(rouge, vert, bleu,15)
+    background(rouge, vert, bleu, 40)
     let t = frameCount / 60;
 
     musicPlay(soundA, 65) //a
@@ -220,7 +220,6 @@ function draw() {
     if (soundC.currentTime() < soundC.duration() - 0.1 && soundC.currentTime() > 0) {
         animC()
     } else {
-        background(0)
         springs = []
     }
 
@@ -472,13 +471,16 @@ function animB() {
 }
 
 //suite de boules tirées par un effet elastique proportionnel au son
+//try to launch it several times before the sound ends !
 function animC() {
     push()
     soundCFFT.analyze()
     let middle = soundCFFT.getEnergy("mid")
+    console.log(middle)
+    let middleSpring = map(middle, 105, 249, -(height / 4), height / 4)
     let timeline = map(soundC.currentTime(), 0, soundC.duration(), 50, width - 50)
     //add new spring for each overpassing of the energy of the range of freq
-    if (middle > 125) springs.push(new Spring(timeline, middle))
+    if (middle > 105) springs.push(new Spring(timeline, middle, middleSpring))
 
     for (var i = 0; i < springs.length; i++) {
         springs[i].update();
@@ -488,6 +490,7 @@ function animC() {
 }
 
 function animD() {
+    push()
     t = map(soundD.currentTime(), 0, soundD.duration(), 0, 20)
     angleL += speedL * t
     var sinval = sin(angleL)
@@ -501,6 +504,7 @@ function animD() {
     rect(x, y, 25, 25, 2)
     fill(225, 0, 0)
     rect(x2, y2, 25, 25, 2)
+    pop()
 }
 
 //inspirée d'un sketch Pde tiré du bouquin "DEsign Generatif" de H. Bohnacker, B. Grob, J. Laub, et C. Lazzeroni publié par Pyramid
@@ -561,12 +565,14 @@ function animF() {
 }
 
 function animG() {
+    push()
     amplitudeG.setInput(soundG)
     var levelG = map(amplitudeG.getLevel(), 0, 0.08772784950665151, 0, 100)
     let posX = map(soundG.currentTime(), 0, soundG.duration(), 0, width)
     stroke(256, 30, 45)
     strokeWeight(30)
     if (levelG > 60) line(posX, 0, posX, height)
+    pop()
 }
 
 function animH() {
@@ -577,10 +583,10 @@ function animH() {
 function animI() { //i
     amplitudeI.setInput(soundI)
     let levelI = amplitudeI.getLevel()
-    console.log(levelI)
+    // console.log(levelI)
     var length = map(levelI, 0, 0.042, 0, width / 10)
     push()
-        noStroke()
+    noStroke()
     fill(255)
     translate(width / 2, 0)
     //cacher la fin du son qui n'est plus audible
@@ -684,7 +690,7 @@ function animN() {
 
 function animO() {
     //circle morph
-
+    push()
     fill(220, 0, 30)
     noStroke()
     //   strokeWeight(2)
@@ -697,13 +703,13 @@ function animO() {
     let radiusY = map(levelO, 0, 0.1, 30, 350) * cos(amppY)
 
     ellipse(width / 2, height / 2, radiusX, radiusY)
-
+    pop()
 }
 
 function animP() {
     //rectangles qui tournent sur eux même sur fond jaune
-    background(255, 255, 20)
     push()
+
     rectMode(CENTER)
     for (var i = 0; i < 25; i++) {
         push()
