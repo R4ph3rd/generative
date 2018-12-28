@@ -5,6 +5,7 @@ var amplitudeK
 var amplitudeF
 var amplitudeE
 var amplitudeZ
+var amplitudeG
 
 var soundAFFT
 
@@ -21,8 +22,9 @@ var cordes = []
 //l
 var cerclesConfiance = []
 
-//e
+
 var pgE
+var pgC
 
 var timeStart
 var timeAnim
@@ -63,9 +65,10 @@ var radiusQ = 50
 var sizeX = 0
 var sizeY = 0
 
+//palette de couleur
 var palette = []
-
-
+var randomColor
+var colorsCircles = []
 
 
 function preload() {
@@ -112,9 +115,12 @@ function setup() {
     amplitudeI = new p5.Amplitude()
     amplitudeE = new p5.Amplitude()
     amplitudeZ = new p5.Amplitude()
+    amplitudeG = new p5.Amplitude()
 
     soundAFFT = new p5.FFT(0.8, 16)
     soundAFFT.setInput(soundA)
+    soundCFFT = new p5.FFT(0.8, 16)
+    soundCFFT.setInput(soundC)
 
 
     palette[0] = color(154, 202, 62)
@@ -123,11 +129,12 @@ function setup() {
     palette[3] = color(252, 217, 76)
     palette[4] = color(74, 184, 219)
     palette[5] = color(255, 140, 231)
-    palette[6] = color(193, 115, 15)
+    palette[6] = color(30, 25, 106)
+    //palette[6] = color(193, 115, 15)
+    palette[7] = color(241, 101, 39)
+    //palette[9] = color(182,236,218)
+    //   palette[10] = color(190,255,127)
 
-    /* for (var i = 0; i < 4000; i++) {
-      agents[i] = new Agent();
-    }*/
 
     xpos = 200
     ypos = 7 * height / 8
@@ -135,14 +142,14 @@ function setup() {
 
     /* a = 150 / height
      b = 70 / width
-     console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAA=" + a)
-     console.log("BBBBBBBBBBBBBBBBBBBBBBBBB=" + b)*/
+*/
     //pour anim2
     Xrect = 0.043 * width
     Yrect = 0.203804 * height //reponsive !
     pg = createGraphics(width, height)
 
     pgE = createGraphics(width, height)
+    pgC = createGraphics(width, height)
 
 
     //pour animI
@@ -352,7 +359,7 @@ function windowResized() {
     background(0)
 }
 
-//for color palette, inspired by @GotoLoop, sketch online at https://forum.processing.org/two/discussion/17621/array-of-colors#Item_1
+//for color palette, helped by @GotoLoop, sketch online at https://forum.processing.org/two/discussion/17621/array-of-colors#Item_1
 function animA() {
     push()
 
@@ -362,16 +369,19 @@ function animA() {
     translate(width / 2, height / 2)
 
     let angle = TWO_PI / 80
-
+    for (let i = 0; i < 4; i++) {
+        colorsCircles[i] = random(palette)
+    }
 
     for (let j = 0; j < height / 2; j = j + 40) {
+        randomColor = random(colorsCircles);
+
         push()
         rotate(random(j))
         noFill()
         strokeWeight(40)
         strokeCap(SQUARE)
-        stroke(palette[random(6)])
-        console.log(palette[random(6)])
+        stroke(randomColor)
 
         let direction = int(random(0, 2) < 1) ? 1 : -1
 
@@ -390,10 +400,55 @@ function animA() {
 }
 
 
-
+//cercles de totem rectangulaires filaires, avec "vibrations" sur les notes appuyées
 function animB() {
-
+    push()
+    rectMode(CENTER)
+    transparence = 10
     amplitudeB.setInput(soundB)
+    let levelB = amplitudeB.getLevel()
+    console.log(levelB)
+    let seuil = map(levelB, 0, 0.04188412655659618, 0, 100)
+    //retrecissement du rect interne par rapport à l'amp
+    let miniX = map(levelB, 0, 0.04188412655659618, 50, 5)
+    let miniY = map(levelB, 0, 0.04188412655659618, 180, 18)
+    //grossissement du rect exterieur par rapport à l'amplitude
+    let maxX = map(levelB, 0, 0.04188412655659618, 0, 50)
+    let maxY = map(levelB, 0, 0.04188412655659618, 0, 180)
+    let minicoin = map(levelB, 0, 0.04188412655659618, 0, 10) 
+
+
+    let totems = 6
+    let currentTotem = (map(soundB.currentTime(), 0, soundB.duration(), 0, totems + 1))
+    let posXgauche = 0
+    let posYgauche = 0
+    let posYdroite = 0
+    let posXdroite = 0
+
+    push()
+    translate(width / 2, height / 2)
+    for (i = 0; i < currentTotem; i++) {
+
+        posXdroite = (height / 4 * -cos(i * PI / 6 + PI / 2))
+        posYdroite = (height / 4 * -sin(i * PI / 6 + PI / 2))
+        posXgauche = height / 4 * cos(i * PI / 6 + PI / 2)
+        posYgauche = height / 4 * -sin(i * PI / 6 + PI / 2)
+
+        noFill()
+        strokeWeight(2)
+        stroke(255, 38 * i, 0)
+        rect(posXdroite, posYdroite, 50 + maxX, 180 + maxY, 10)
+        rect(posXgauche, posYgauche, 50 + maxX, 180 + maxY, 10)
+        if (seuil > 60) {
+            for (let i = 0; i < minicoin; i++) {
+                rect(posXdroite, posYdroite, miniX , miniY , minicoin)
+                rect(posXgauche, posYgauche, miniX , miniY , minicoin)
+            }
+        }
+    }
+    pop()
+    pop()
+    /*  amplitudeB.setInput(soundB)
     var levelB = amplitudeB.getLevel()
     var seuil = map(levelB, 0, 0.025757474504161826, 0, 100)
     var pasCurrent = map(soundB.currentTime(), 0, soundB.duration(), 0, 30)
@@ -411,12 +466,29 @@ function animB() {
         ellipse(x, y, 50, 50)
         pop()
     }
-
+*/
 
 }
 
 function animC() {
+    push()
+    soundCFFT.analyze()
+    let middle = soundCFFT.getEnergy("highMid")
+    let middleAngle = map(middle, 0, 200, 0, TWO_PI)
+    // console.log("middleX = " +middleX)
+    for (var i = 0; i <= 600; i++) {
+        let angle = map(i, 0, 600, 0, TWO_PI)
+        var oscYx = width / 2 - 25 + (angle) % 1 * (width / 2 - 2 * 25);
+        var oscXy = height / 2 - 25 + (angle) % 1 * (height / 2 - 2 * 25);
 
+        // let x = (width / 2) + (sin(middleX + TWO_PI) * 300)
+        //    let y = (height / 2) + (sin(middleY) * 300)
+        pgC.fill(255)
+        pgC.noStroke()
+        pgC.ellipse(oscYx, oscXy, 10, 10)
+        image(pgC, 0, 0, width, height)
+        pop()
+    }
 }
 
 function animD() {
@@ -475,27 +547,30 @@ function animF() {
     amplitudeF.setInput(soundF)
     var levelF = amplitudeF.getLevel()
     transparence = 10
-    var radius = map(levelF, 0, 0.1, 30, 150) //pour changer le radius des points
+    var radius = map(levelF, 0, 0.1, 20, 150) //pour changer le radius des points
     var point = 12
     var currentPoint = map(soundF.currentTime(), 0, soundF.duration(), 0, point + 1)
 
     push()
     translate(0, height / 2)
     for (i = 1; i < currentPoint + 1; i++) {
-        noStroke()
-        fill(5, 120, 0)
+        noFill()
+        strokeWeight(2)
+        stroke(5, 120, 0)
         ellipse(i * width / 14, 0, radius, radius)
+        ellipse(i * width / 14, 0, radius + 15, radius + 15)
+        ellipse(i * width / 14, 0, radius + 30, radius + 30)
     }
     pop()
 }
 
 function animG() {
-    /*for (posX = width / 12; posX < width; posX = posX + width / 12) { //comment faire un delay pour apparition progressive des barres ?
-        // delai = millis()
-        strokeWeight(10)
-        stroke(255)
-        line(posX, height * 0.8, posX, height * 0.2)
-    }*/
+    amplitudeG.setInput(soundG)
+    var levelG = map(amplitudeG.getLevel(), 0, 0.08772784950665151, 0, 100)
+    let posX = map(soundG.currentTime(), 0, soundG.duration(), 0, width)
+    stroke(256, 30, 45)
+    strokeWeight(30)
+    if (levelG > 60) line(posX, 0, posX, height)
 }
 
 function animH() {
@@ -682,33 +757,8 @@ function animT() {
 }
 
 function animU() { //s
-    transparence = 10
 
-    var totems = 6
-    var currentTotem = (map(soundK.currentTime(), 0, soundK.duration(), 0, totems + 1))
-    var posXgauche = 0
-    var posYgauche = 0
-    var posYdroite = 0
-    var posXdroite = 0
-
-    push()
-    translate(width / 2, height / 2)
-    for (i = 0; i < currentTotem; i++) {
-        console.log("je suis dans le for K")
-
-        posXdroite = (height / 4 * -cos(i * PI / 6 + PI / 2))
-        posYdroite = (height / 4 * -sin(i * PI / 6 + PI / 2))
-        posXgauche = height / 4 * cos(i * PI / 6 + PI / 2)
-        posYgauche = height / 4 * -sin(i * PI / 6 + PI / 2)
-
-        noStroke()
-        fill(255, 38 * i, 0)
-        rect(posXdroite, posYdroite, 50, 180, 10)
-        rect(posXgauche, posYgauche, 50, 180, 10)
-    }
-    pop()
 }
-
 
 function animV() {
 
