@@ -15,7 +15,6 @@ var levelB
 //b
 var biscottes = []
 var pg
-var transparence
 
 //h
 var cordes = []
@@ -71,7 +70,7 @@ var randomColor
 var colorsCircles = []
 
 //c
-var springs = [] 
+var springs = []
 
 
 
@@ -171,7 +170,7 @@ function setup() {
 
 function draw() {
     randomSeed(seed);
-    background(rouge, vert, bleu, transparence)
+    background(rouge, vert, bleu,15)
     let t = frameCount / 60;
 
     musicPlay(soundA, 65) //a
@@ -220,8 +219,9 @@ function draw() {
 
     if (soundC.currentTime() < soundC.duration() - 0.1 && soundC.currentTime() > 0) {
         animC()
-    } else if (soundC.currentTime() > soundC.duration() - 0.1) {
+    } else {
         background(0)
+        springs = []
     }
 
     if (soundD.currentTime() < soundD.duration() - 0.1 && soundD.currentTime() > 0) {
@@ -416,7 +416,7 @@ function animB() {
     //grossissement du rect exterieur par rapport à l'amplitude
     let maxX = map(levelB, 0, 0.04188412655659618, 0, 50)
     let maxY = map(levelB, 0, 0.04188412655659618, 0, 180)
-    let minicoin = map(levelB, 0, 0.04188412655659618, 0, 10) 
+    let minicoin = map(levelB, 0, 0.04188412655659618, 0, 10)
 
 
     let totems = 6
@@ -442,8 +442,8 @@ function animB() {
         rect(posXgauche, posYgauche, 50 + maxX, 180 + maxY, 10)
         if (seuil > 60) {
             for (let i = 0; i < minicoin; i++) {
-                rect(posXdroite, posYdroite, miniX , miniY , minicoin)
-                rect(posXgauche, posYgauche, miniX , miniY , minicoin)
+                rect(posXdroite, posYdroite, miniX, miniY, minicoin)
+                rect(posXgauche, posYgauche, miniX, miniY, minicoin)
             }
         }
     }
@@ -476,19 +476,15 @@ function animC() {
     push()
     soundCFFT.analyze()
     let middle = soundCFFT.getEnergy("mid")
-    let middleSpring = map(middle, 0, 200, 0,400)
-     console.log("middle = " +middle)
-    stroke(255)
-    strokeWeight(2)
-    let timeline = map(soundC.currentTime(),0,soundC.duration(), 50, width - 50)
-    
-  if(middle > 125) springs. push(new Spring(timeline, height/2, 15, 0.98, 8.0, 0.1))
+    let timeline = map(soundC.currentTime(), 0, soundC.duration(), 50, width - 50)
+    //add new spring for each overpassing of the energy of the range of freq
+    if (middle > 125) springs.push(new Spring(timeline, middle))
 
-   
-  for (var i = 0; i < springs.length ; i++) { 
-    springs[i].update(); 
-    springs[i].display();
-  }
+    for (var i = 0; i < springs.length; i++) {
+        springs[i].update();
+        springs[i].display();
+    }
+    pop()
 }
 
 function animD() {
@@ -583,10 +579,9 @@ function animI() { //i
     let levelI = amplitudeI.getLevel()
     console.log(levelI)
     var length = map(levelI, 0, 0.042, 0, width / 10)
-
-    noStroke()
-    fill(255)
     push()
+        noStroke()
+    fill(255)
     translate(width / 2, 0)
     //cacher la fin du son qui n'est plus audible
     if (soundI.currentTime() < soundI.duration()) {
@@ -603,11 +598,13 @@ function animJ() { //j
     //jet de cocobilles
     var t = map(soundJ.currentTime(), 0, soundJ.duration() * 0.60, 0, 1)
     t = constrain(t, 0, 1)
-    noStroke()
+
     var xtarget = []
     var ytarget = []
-    fill(0, 20, 230)
+
     push()
+    noStroke()
+    fill(0, 20, 230)
     //placer le point d'origine dans un cercle de 50 autour du centre de l'écran
     translate(random((width / 2) - 50, (width / 2) + 50), random((height / 2) + 50, (height / 2) - 50))
     //angle de lancé alétoire
@@ -630,6 +627,7 @@ function animK() {
     let after = map(soundK.currentTime(), 0, soundK.duration(), width / 6, 5 * (width / 6))
     stroke(30, 120, 60)
     strokeWeight(height / 8)
+    noFill()
     line(before, height / 2, after, height / 2)
 }
 
@@ -673,6 +671,8 @@ function animN() {
         var x = cos(angle) * ((cos(angle)) - 10 * cos(4 * angle) - pow(sin(angle / 4), 15)) * 40
         var y = sin(angle) * ((cos(angle)) - 10 * cos(4 * angle) - pow(sin(angle / 4), 15)) * 40
         stroke(255, 15)
+        strokeWeight(1)
+        noFill()
         push()
         rotate(i / 210)
         line(x, y, x + 100, y + 100)
@@ -813,7 +813,7 @@ function animZ() {
 
     if (displayy > 25) { //conditon d'affichage : si amplitude sonore > 85 %
         biscottes.push(new biscotte())
-       // console.log("neew")
+        // console.log("neew")
     }
     console.log(biscottes.length)
     for (let i = 0; i < biscottes.length; i++) {
