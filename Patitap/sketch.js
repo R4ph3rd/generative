@@ -7,12 +7,14 @@ var amplitudeE
 var amplitudeZ
 var amplitudeG
 var amplitudeT
+var amplitudeV
 
 var soundAFFT
 var soundSFFT
 var soundCFFT
 var soundTFFT
 var soundQFFT
+var soundHFFT
 
 var levelA
 var levelB
@@ -139,6 +141,8 @@ function setup() {
     amplitudeG.setInput(soundG)
     amplitudeT = new p5.Amplitude()
     amplitudeT.setInput(soundT)
+    amplitudeV = new p5.Amplitude()
+    amplitudeV.setInput(soundV)
 
     soundAFFT = new p5.FFT(0.8, 16)
     soundAFFT.setInput(soundA)
@@ -150,6 +154,8 @@ function setup() {
     soundTFFT.setInput(soundT)
     soundQFFT = new p5.FFT(0.8, 16)
     soundQFFT.setInput(soundQ)
+    soundHFFT = new p5.FFT(0.8, 16)
+    soundHFFT.setInput(soundH)
 
     //for color palette, helped by a sketch of @GotoLoop, sketch online at https://forum.processing.org/two/discussion/17621/array-of-colors#Item_1
     palette[0] = color(154, 202, 62)
@@ -197,7 +203,6 @@ function setup() {
 function draw() {
     randomSeed(seed);
     background(rouge, vert, bleu, 40)
-    let t = frameCount / 60;
 
     musicPlay(soundA, 65) //a
     musicPlay(soundB, 66) //b
@@ -209,11 +214,9 @@ function draw() {
     musicPlay(soundH, 72) ////h
     musicPlay(soundI, 73) //i
     musicPlay(soundJ, 74) //j
-
     musicPlay(soundK, 75) //k
     musicPlay(soundL, 76) //l
     musicPlay(soundM, 77) //m
-
     musicPlay(soundN, 78) //n
     musicPlay(soundO, 79) //o
     musicPlay(soundP, 80) //p
@@ -230,7 +233,6 @@ function draw() {
 
 
     if (soundA.currentTime() < soundA.duration() - 0.1 && soundA.currentTime() > 0) {
-
         animA()
     }
 
@@ -240,7 +242,6 @@ function draw() {
         pg.clear()
         biscottes = []
         transparence = 100
-
     }
 
     if (soundC.currentTime() < soundC.duration() - 0.1 && soundC.currentTime() > 0) {
@@ -488,7 +489,7 @@ function animC() {
     let middle = soundCFFT.getEnergy("mid")
     console.log(middle)
     let middleSpring = map(middle, 105, 249, -(height / 4), height / 4)
-    let timeline = map(soundC.currentTime(), 0, soundC.duration(), 50, width - 50)
+    let timeline = map(soundC.currentTime(), 0, soundC.duration() * 0.65, 50, width - 50)
     //add new spring for each excess of the energy of the range of freq
     if (middle > 105) springs.push(new Spring(timeline, middle, middleSpring))
 
@@ -503,12 +504,12 @@ function animD() {
     push()
     t = map(soundD.currentTime(), 0, soundD.duration(), 0, 20)
     angleL += speedL * t
-    var sinval = sin(angleL)
-    var cosval = cos(angleL)
-    var x = (width / 2) + (cosval * radiusL)
-    var y = (height / 2) + (sinval * radiusL)
-    var x2 = x + cos(angleL * sx) * radiusL / 2
-    var y2 = y + sin(angleL * sy) * radiusL / 2
+    let sinval = sin(angleL)
+    let cosval = cos(angleL)
+    let x = (width / 2) + (cosval * radiusL)
+    let y = (height / 2) + (sinval * radiusL)
+    let x2 = x + cos(angleL * sx) * radiusL / 2
+    let y2 = y + sin(angleL * sy) * radiusL / 2
     fill(255)
     noStroke()
     rect(x, y, 25, 25, 2)
@@ -560,11 +561,12 @@ function animF() {
     var currentPoint = map(soundF.currentTime(), 0, soundF.duration(), 0, point + 1)
 
     push()
+    noFill()
+    strokeWeight(2)
+    stroke(random(palette))
     translate(0, height / 2)
     for (i = 1; i < currentPoint + 1; i++) {
-        noFill()
-        strokeWeight(2)
-        stroke(5, 120, 0)
+
         ellipse(i * width / 14, 0, radius, radius)
         ellipse(i * width / 14, 0, radius + 15, radius + 15)
         ellipse(i * width / 14, 0, radius + 30, radius + 30)
@@ -583,8 +585,22 @@ function animG() {
 }
 
 function animH() {
+    push()
+    noFill()
+    strokeWeight(5)
+    stroke(random(palette))
+    soundHFFT.analyze()
+    let middle = soundHFFT.getEnergy("highMid")
+    //  console.log(middle)
+    let varX = map(middle, 0, 123.5, -100, 100)
+    let posX = map(soundH.currentTime(), 0, soundH.duration(), 0, width)
 
-
+    for (let w = 0; w < width; w = w = w + 200) {
+        //change their position proportionally to the bass freq with randomly direction
+        let direction = int(random(0, 2) < 1) ? 1 : -1
+        line(random(width) + (varX * direction), 0, random(width) + (varX * direction), height)
+    }
+    pop()
 }
 
 function animI() { //i
@@ -593,7 +609,7 @@ function animI() { //i
     var length = map(levelI, 0, 0.042, 0, width / 10)
     push()
     noStroke()
-    fill(255)
+    fill(random(palette))
     translate(width / 2, 0)
     //cacher la fin du son qui n'est plus audible
     if (soundI.currentTime() < soundI.duration()) {
@@ -616,13 +632,13 @@ function animJ() { //j
 
     push()
     noStroke()
-    fill(0, 20, 230)
+    fill(random(palette))
     //placer le point d'origine dans un cercle de 50 autour du centre de l'écran
     translate(random((width / 2) - 50, (width / 2) + 50), random((height / 2) + 50, (height / 2) - 50))
     //angle de lancé alétoire
     rotate(random(TWO_PI))
     for (i = 0; i < 15; i++) {
-        xtarget = random(50, 400)
+        xtarget = random(100, 500)
         ytarget = random(-100, 100)
         var x = lerp(0, xtarget, t)
         var y = lerp(0, ytarget, t)
@@ -650,7 +666,7 @@ function animK() {
 
 function animL() { //l
     let transp = map(soundL.currentTime(), 0, soundL.duration() - 0.2, 100, 0)
-    background(96, 5, 180, transp)
+    background(93, 79, 89, transp)
 }
 
 function animM() {
@@ -660,7 +676,7 @@ function animM() {
     if (width < height) radius = width / 3
     else radius = height / 3
 
-    stroke(255)
+    stroke(random(palette))
     strokeWeight(5)
     noFill()
     strokeJoin(ROUND)
@@ -716,7 +732,7 @@ function animO() {
 }
 
 function animP() {
-    //rectangles qui tournent sur eux même sur fond jaune
+    //rectangles qui tournent sur eux mêmeS
     push()
 
     rectMode(CENTER)
@@ -736,25 +752,26 @@ function animP() {
 
 function animQ() {
     push()
-    soundQFFT.analyze()
-    let middle = soundQFFT.getEnergy("mid")
-   // console.log(middle)
-    let middleSpring = map(middle, 105, 249, -(height / 4), height / 4)
-    
     var timeline = map(soundQ.currentTime(), 0, soundQ.duration(), 0, 1)
     timeline = constrain(0, 1)
 
-    springQ.push(new Spring(100, middle, width - 200))
-    
-        springQ[i].update();
-        springQ[i].displayQ();
-    
-    
+    springQ.push(new Spring(100, width - 200))
+
+    springQ[i].update();
+    springQ[i].displayQ();
     pop()
 }
 
 function animR() {
-
+    push()
+    let x = map(soundR.currentTime(), 0, soundR.duration(), 0, width)
+    noStroke()
+    fill(random(palette), 30)
+    for (let i = height / 4; i < height; i = i + (height / 4)) {
+        let y = i + (sin(x) * 20)
+        ellipse(x, y, 20, 20)
+    }
+    pop()
 }
 
 
@@ -802,17 +819,61 @@ function animT() {
     fill(random(palette))
     ellipse(x, y, size, size)
 
-
     pop()
-
 }
 
-function animU() { //s
+//inspired by a sketch Pde from  "DEsign Generatif" (p.357), written by H. Bohnacker, B. Grob, J. Laub, et C. Lazzeroni, published by Pyramid
+function animU() { //u
+    push()
+    translate(width / 2, height / 2)
+    let couleur = random(palette)
+    let nombrePoints = 1500
+    let apparition = map(soundU.currentTime(), 0, soundU.duration() * 0.76, 0, nombrePoints)
+    stroke(couleur)
+    strokeWeight(1)
+    noFill()
 
+    for (var i = 0; i <= nombrePoints && apparition > i; i++) {
+        push()
+        let angle = map(i, 0, nombrePoints, 0, TWO_PI);
+        // play w/ value of the Lissajous curve
+        let x = (sin(angle * 2 + radians(30)) * cos(angle)) * (width / 2 - 25) 
+        let y = (sin(angle * 5) * cos(angle)) * (height / 2 - 25)
+        translate(x,y)
+        rotate(i)
+        rect(0,0, 15,15)
+        pop()
+    }
+    pop()
 }
 
 function animV() {
+    //circle morph
+    push()
+    fill(random(palette))
+    noStroke()
+    var levelV = amplitudeV.getLevel()
+    amppY += 0.05
+    amppX += 0.03
+    let radiusY = 120
+    let radiusX = 120
 
+    let posY = map(soundV.currentTime(), 0, soundV.duration() * 0.08, height, height / 2)
+    let posYhaut = map(soundV.currentTime(), 0, soundV.duration() * 0.08, 0, height / 2)
+    let diminue = 1
+
+    if (soundV.currentTime() > soundV.duration() * 0.08) {
+        diminue = map(soundV.currentTime(), soundV.duration() * 0.08, soundV.duration(), 1, 10)
+        posY = height / 2
+        posYhaut = height / 2
+        radiusX = map(levelV, 0, 0.1, 30, 180) * cos(amppX)
+        radiusY = map(levelV, 0, 0.1, 30, 180) * cos(amppY)
+    }
+
+    ellipse(width / 4, posYhaut, radiusX / diminue, radiusY / diminue)
+    ellipse(width / 2, posY, radiusX / diminue, radiusY / diminue)
+    ellipse(3 * width / 4, posYhaut, radiusX / diminue, radiusY / diminue)
+    pop()
 }
 
 function animW() {
@@ -849,7 +910,30 @@ function animX() {
 }
 
 function animY() {
+    push()
+    t = map(soundY.currentTime(), 0, 3.05, 4 * TWO_PI, 0)
+    let couleur = random(palette)
 
+    radiusY = map(soundY.currentTime(), 0, 3.05, (height / 2) - 50, 0)
+    let sinval = +sin(t)
+    let cosval = +cos(t)
+    let x = (width / 2) + (cosval * radiusY)
+    let y = (height / 2) + (sinval * radiusY)
+    let taille = 15
+    if (soundY.currentTime() > 3.1) {
+        taille = map(soundY.currentTime(), 3.05, soundY.duration(), 15, 200)
+        //h += 0.001 noise foireux à corriger
+        x = (width / 2)
+        y = (height / 2)
+        stroke(couleur)
+        strokeWeight(map(soundY.currentTime(), 3.05, soundY.duration(), 2, 5))
+        noFill()
+    } else {
+        noStroke()
+        fill(couleur)
+    }
+    ellipse(x, y, taille, taille)
+    pop()
 }
 
 
