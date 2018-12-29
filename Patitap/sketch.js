@@ -101,9 +101,9 @@ function preload() {
     soundM = loadSound("assets/jimi.wav")
     soundN = loadSound("assets/j.bonamassa_lick.wav")
     soundO = loadSound("assets/jump_wah_wah.wav")
-    soundP = loadSound("assets/rythm_wahwah.wav")
+    soundP = loadSound("assets/retour_lick.wav")
     soundQ = loadSound("assets/rebond_basse.wav")
-    soundR = loadSound("assets/retour_lick.wav")
+    soundR = loadSound("assets/rythm_wahwah.wav")
     soundS = loadSound("assets/slide_317.wav")
     soundT = loadSound("assets/dumiel.wav")
     soundU = loadSound("assets/watchtower_lick.wav")
@@ -232,10 +232,30 @@ function draw() {
     musicPlay(soundZ, 90) //z
 
 
+    // first, in foreground, riffs wich can be repeated as sound background
+    //only one except, because this animation change background color
+    if (soundL.currentTime() < soundL.duration() - 0.1 && soundL.currentTime() > 0) {
+        animL()
+    }
+
+
     if (soundA.currentTime() < soundA.duration() - 0.1 && soundA.currentTime() > 0) {
         animA()
     }
+    if (soundZ.currentTime() < soundZ.duration() - 0.1 && soundZ.currentTime() > 0) {
+        animZ()
+    }
 
+    if (soundR.currentTime() < soundR.duration() - 0.1 && soundR.currentTime() > 0) {
+        animR()
+    }
+
+    if (soundE.currentTime() < soundE.duration() - 0.1 && soundE.currentTime() > 0) {
+        animE()
+    }
+
+
+    //then short animations
     if (soundB.currentTime() < soundB.duration() - 0.1 && soundB.currentTime() > 0) {
         animB()
     } else {
@@ -252,10 +272,6 @@ function draw() {
 
     if (soundD.currentTime() < soundD.duration() - 0.1 && soundD.currentTime() > 0) {
         animD()
-    }
-
-    if (soundE.currentTime() < soundE.duration() - 0.1 && soundE.currentTime() > 0) {
-        animE()
     }
 
     if (soundF.currentTime() < soundF.duration() - 0.1 && soundF.currentTime() > 0) {
@@ -281,88 +297,57 @@ function draw() {
 
     if (soundK.currentTime() < soundK.duration() - 0.1 && soundK.currentTime() > 0) {
         animK()
-    } else {
-        transparence = 40
     }
-    if (soundL.currentTime() < soundL.duration() - 0.1 && soundL.currentTime() > 0) {
-        animL()
-    } else {
-        transparence = 40
-    }
+
     if (soundM.currentTime() < soundM.duration() - 0.1 && soundM.currentTime() > 0) {
         animM()
-    } else {
-        transparence = 40
     }
+
     if (soundN.currentTime() < soundN.duration() - 0.1 && soundN.currentTime() > 0) {
         animN()
-    } else {
-        transparence = 40
     }
+
     if (soundO.currentTime() < soundO.duration() - 0.1 && soundO.currentTime() > 0) {
         animO()
-    } else {
-        transparence = 40
     }
+
     if (soundP.currentTime() < soundP.duration() - 0.1 && soundP.currentTime() > 0) {
         animP()
-    } else {
-        transparence = 40
     }
+
     if (soundQ.currentTime() < soundQ.duration() - 0.1 && soundQ.currentTime() > 0) {
         animQ()
     } else {
         springQ = []
     }
-    if (soundR.currentTime() < soundR.duration() - 0.1 && soundR.currentTime() > 0) {
-        animR()
-    } else {
-        transparence = 40
-    }
+
     if (soundS.currentTime() < soundS.duration() - 0.1 && soundS.currentTime() > 0) {
         animS()
-    } else {
-        transparence = 40
     }
+
     if (soundT.currentTime() < soundT.duration() - 0.1 && soundT.currentTime() > 0) {
         animT()
-    } else {
-        transparence = 40
     }
+
     if (soundU.currentTime() < soundU.duration() - 0.1 && soundU.currentTime() > 0) {
         animU()
-    } else {
-        transparence = 40
     }
+
     if (soundV.currentTime() < soundV.duration() - 0.1 && soundV.currentTime() > 0) {
         animV()
-    } else {
-        transparence = 40
     }
+
     if (soundW.currentTime() < soundW.duration() - 0.1 && soundW.currentTime() > 0) { //u
         animW()
-    } else {
-        transparence = 40
     }
 
     if (soundX.currentTime() < soundX.duration() - 0.1 && soundX.currentTime() > 0) {
         animX()
-    } else {
-        transparence = 40
     }
 
     if (soundY.currentTime() < soundY.duration() - 0.1 && soundY.currentTime() > 0) {
         animY()
-    } else {
-        transparence = 40
     }
-    if (soundZ.currentTime() < soundZ.duration() - 0.1 && soundZ.currentTime() > 0) {
-        animZ()
-    } else {
-        transparence = 40
-    }
-
-
 } //loop
 
 
@@ -425,8 +410,8 @@ function animA() {
         }
         endShape()
         pop()
+        pop()
     }
-    pop()
     pop()
 }
 
@@ -633,7 +618,7 @@ function animJ() { //j
     push()
     noStroke()
     fill(random(palette))
-    //placer le point d'origine dans un cercle de 50 autour du centre de l'écran
+    //placer le point d'origine dans un cercle de 50px autour du centre de l'écran
     translate(random((width / 2) - 50, (width / 2) + 50), random((height / 2) + 50, (height / 2) - 50))
     //angle de lancé alétoire
     rotate(random(TWO_PI))
@@ -670,7 +655,6 @@ function animL() { //l
 }
 
 function animM() {
-
     push()
     let radius;
     if (width < height) radius = width / 3
@@ -685,9 +669,9 @@ function animM() {
     translate(width / 2, height / 2)
     beginShape();
     for (i = 0; i < TWO_PI; i += mod) {
-        let x = radius * cos(i);
-        let y = radius * sin(i);
-        vertex(x, y);
+        let xpos = radius * cos(i);
+        let ypos = radius * sin(i);
+        vertex(xpos, ypos);
     }
     endShape(CLOSE);
     pop()
@@ -732,20 +716,13 @@ function animO() {
 }
 
 function animP() {
-    //rectangles qui tournent sur eux mêmeS
     push()
-
-    rectMode(CENTER)
-    for (var i = 0; i < 25; i++) {
-        push()
-        noFill()
-        strokeWeight(2)
-        stroke(random(80), random(250), random(255))
-        translate(random(width), random(height))
-        rotate(frameCount / 10 + i)
-        rect(0, 0, 200, 50, 10)
-        pop()
-
+    let x = map(soundP.currentTime(), 0, soundP.duration(), 0, width)
+    noStroke()
+    fill(random(palette), 30)
+    for (let i = height / 4; i < height; i = i + (height / 4)) {
+        let y = i + (sin(x) * 20)
+        ellipse(x, y, 20, 20)
     }
     pop()
 }
@@ -763,13 +740,20 @@ function animQ() {
 }
 
 function animR() {
+    //rectangles qui tournent sur eux mêmeS
     push()
-    let x = map(soundR.currentTime(), 0, soundR.duration(), 0, width)
-    noStroke()
-    fill(random(palette), 30)
-    for (let i = height / 4; i < height; i = i + (height / 4)) {
-        let y = i + (sin(x) * 20)
-        ellipse(x, y, 20, 20)
+
+    rectMode(CENTER)
+    for (var i = 0; i < 25; i++) {
+        push()
+        noFill()
+        strokeWeight(2)
+        stroke(random(80), random(250), random(255))
+        translate(random(width), random(height))
+        rotate(frameCount / 10 + i)
+        rect(0, 0, 200, 50, 10)
+        pop()
+
     }
     pop()
 }
@@ -837,11 +821,11 @@ function animU() { //u
         push()
         let angle = map(i, 0, nombrePoints, 0, TWO_PI);
         // play w/ value of the Lissajous curve
-        let x = (sin(angle * 2 + radians(30)) * cos(angle)) * (width / 2 - 25) 
+        let x = (sin(angle * 2 + radians(30)) * cos(angle)) * (width / 2 - 25)
         let y = (sin(angle * 5) * cos(angle)) * (height / 2 - 25)
-        translate(x,y)
+        translate(x, y)
         rotate(i)
-        rect(0,0, 15,15)
+        rect(0, 0, 15, 15)
         pop()
     }
     pop()
