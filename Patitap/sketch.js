@@ -6,8 +6,13 @@ var amplitudeF
 var amplitudeE
 var amplitudeZ
 var amplitudeG
+var amplitudeT
 
 var soundAFFT
+var soundSFFT
+var soundCFFT
+var soundTFFT
+var soundQFFT
 
 var levelA
 var levelB
@@ -72,6 +77,10 @@ var colorsCircles = []
 //c
 var springs = []
 
+//q
+var springQ = []
+
+
 
 
 function preload() {
@@ -94,12 +103,12 @@ function preload() {
     soundQ = loadSound("assets/rebond_basse.wav")
     soundR = loadSound("assets/retour_lick.wav")
     soundS = loadSound("assets/slide_317.wav")
-    soundT = loadSound("assets/harmonique.wav")
+    soundT = loadSound("assets/dumiel.wav")
     soundU = loadSound("assets/watchtower_lick.wav")
     soundV = loadSound("assets/western.wav")
     soundW = loadSound("assets/fin.wav")
     soundX = loadSound("assets/saute_de_veau.wav")
-    soundY = loadSound("assets/western.wav")
+    soundY = loadSound("assets/tap_slide.wav")
     soundZ = loadSound("assets/stevieRAY.wav")
 }
 
@@ -111,19 +120,36 @@ function setup() {
 
     //tous les analysers de son
     amplitudeA = new p5.Amplitude()
+    amplitudeA.setInput(soundA)
     amplitudeB = new p5.Amplitude()
+    amplitudeB.setInput(soundB)
     amplitudeD = new p5.Amplitude()
+    amplitudeD.setInput(soundD)
     amplitudeF = new p5.Amplitude()
+    amplitudeF.setInput(soundF)
     amplitudeO = new p5.Amplitude()
+    amplitudeO.setInput(soundO)
     amplitudeI = new p5.Amplitude()
+    amplitudeI.setInput(soundI)
     amplitudeE = new p5.Amplitude()
+    amplitudeE.setInput(soundE)
     amplitudeZ = new p5.Amplitude()
+    amplitudeZ.setInput(soundZ)
     amplitudeG = new p5.Amplitude()
+    amplitudeG.setInput(soundG)
+    amplitudeT = new p5.Amplitude()
+    amplitudeT.setInput(soundT)
 
     soundAFFT = new p5.FFT(0.8, 16)
     soundAFFT.setInput(soundA)
     soundCFFT = new p5.FFT(0.8, 16)
     soundCFFT.setInput(soundC)
+    soundSFFT = new p5.FFT(0.8, 16)
+    soundSFFT.setInput(soundS)
+    soundTFFT = new p5.FFT(0.8, 16)
+    soundTFFT.setInput(soundT)
+    soundQFFT = new p5.FFT(0.8, 16)
+    soundQFFT.setInput(soundQ)
 
     //for color palette, helped by a sketch of @GotoLoop, sketch online at https://forum.processing.org/two/discussion/17621/array-of-colors#Item_1
     palette[0] = color(154, 202, 62)
@@ -285,7 +311,7 @@ function draw() {
     if (soundQ.currentTime() < soundQ.duration() - 0.1 && soundQ.currentTime() > 0) {
         animQ()
     } else {
-        transparence = 40
+        springQ = []
     }
     if (soundR.currentTime() < soundR.duration() - 0.1 && soundR.currentTime() > 0) {
         animR()
@@ -375,7 +401,7 @@ function animA() {
 
     //define one color + angle per circle, sometimes many side by side can be of the same color
     for (let j = 0; j < height / 2; j = j + 40) {
-        randomColor = random(colorsCircles);
+        randomColor = random(colorsCircles)
 
         push()
         rotate(random(j))
@@ -408,9 +434,8 @@ function animA() {
 function animB() {
     push()
     rectMode(CENTER)
-    amplitudeB.setInput(soundB)
     let levelB = amplitudeB.getLevel()
-   // console.log(levelB)
+    // console.log(levelB)
     let seuil = map(levelB, 0, 0.04188412655659618, 0, 100)
     //retrecissement du rect interne par rapport à l'amp
     let miniX = map(levelB, 0, 0.04188412655659618, 50, 5)
@@ -442,7 +467,7 @@ function animB() {
         stroke(255, 38 * i, 0)
         rect(posXdroite, posYdroite, 50 + maxX, 180 + maxY, 10)
         rect(posXgauche, posYgauche, 50 + maxX, 180 + maxY, 10)
-        
+
         //display vibrating rectangles only f the sound exceed 60 %
         if (seuil > 50) {
             for (let i = 0; i < minicoin; i++) {
@@ -495,7 +520,6 @@ function animD() {
 //inspirée d'un sketch Pde tiré du bouquin "DEsign Generatif" de H. Bohnacker, B. Grob, J. Laub, et C. Lazzeroni publié par Pyramid
 function animE() {
     push()
-    amplitudeE.setInput(soundE)
     var levelE = amplitudeE.getLevel()
     // console.log(levelE)
 
@@ -529,7 +553,6 @@ function animE() {
 
 function animF() {
     //pulupulu un escargot qui enappelle un autre
-    amplitudeF.setInput(soundF)
     var levelF = amplitudeF.getLevel()
     transparence = 10
     var radius = map(levelF, 0, 0.1, 20, 150) //pour changer le radius des points
@@ -551,7 +574,6 @@ function animF() {
 
 function animG() {
     push()
-    amplitudeG.setInput(soundG)
     var levelG = map(amplitudeG.getLevel(), 0, 0.08772784950665151, 0, 100)
     let posX = map(soundG.currentTime(), 0, soundG.duration(), 0, width)
     stroke(256, 30, 45)
@@ -566,7 +588,6 @@ function animH() {
 }
 
 function animI() { //i
-    amplitudeI.setInput(soundI)
     let levelI = amplitudeI.getLevel()
     // console.log(levelI)
     var length = map(levelI, 0, 0.042, 0, width / 10)
@@ -684,8 +705,6 @@ function animO() {
     fill(220, 0, 30)
     noStroke()
     //   strokeWeight(2)
-
-    let haut = amplitudeO.setInput(soundO)
     var levelO = amplitudeO.getLevel()
     amppY += 0.05
     amppX += 0.03
@@ -703,8 +722,9 @@ function animP() {
     rectMode(CENTER)
     for (var i = 0; i < 25; i++) {
         push()
-        noStroke()
-        fill(random(80), random(250), random(255))
+        noFill()
+        strokeWeight(2)
+        stroke(random(80), random(250), random(255))
         translate(random(width), random(height))
         rotate(frameCount / 10 + i)
         rect(0, 0, 200, 50, 10)
@@ -715,40 +735,75 @@ function animP() {
 }
 
 function animQ() {
-    /*  t = map(soundQ.currentTime(), 0, soundQ.duration(), 0, 20)
-      angleQ += speedQ * t
-      var sinval = sin(angleQ)
-      var cosval = cos(angleQ)
-      var positions = {
-         posQx :(width / 5) ,
-         posQy :(5*height/6 ) 
-      }
-      fill(220, 220, 30)
-      noStroke()
+    push()
+    soundQFFT.analyze()
+    let middle = soundQFFT.getEnergy("mid")
+   // console.log(middle)
+    let middleSpring = map(middle, 105, 249, -(height / 4), height / 4)
+    
+    var timeline = map(soundQ.currentTime(), 0, soundQ.duration(), 0, 1)
+    timeline = constrain(0, 1)
 
-
-      var elasticity = anime.timeline();
-      elasticity.add({
-          targets: positions,
-          posQx:5*width/6,
-          posQy:width/6,
-          offset: 0,
-          duration: 3000,
-          elasticity: 300,
-      })
-          ellipse(positions.posQx, positions.posQy, 50, 50)*/
+    springQ.push(new Spring(100, middle, width - 200))
+    
+        springQ[i].update();
+        springQ[i].displayQ();
+    
+    
+    pop()
 }
 
 function animR() {
 
 }
 
-function animS() {
 
+function animS() {
+    push()
+    soundSFFT.analyze()
+    let aigu = soundSFFT.getEnergy("treble")
+    // console.log(aigu)
+    let g = map(soundS.currentTime(), 0, soundS.duration(), 0, 1)
+    let x = lerp(0, width, g)
+    //pour conserver plus ou moins la même vitesse de déplacement selon la taille de la fenetre
+    let inconnue = width / 7
+    let y = -(((x * x) / inconnue) + x / inconnue)
+
+    rectMode(CENTER)
+    noFill()
+    strokeWeight(2)
+    stroke(176, 17, 65)
+    push()
+    translate(width / 4 + x, height + y)
+    rotate(frameCount / 10 + i)
+    rect(0, 0, 50, 50)
+    pop()
+    pop()
 }
 
 function animT() {
+    push()
+    let x = width / 2
+    let y = height / 2
+    let size = 80 + map(soundT.currentTime(), 0, soundT.duration(), 0, 80)
 
+    soundTFFT.analyze()
+    let aigu = soundTFFT.getEnergy("highMid")
+    // console.log(aigu)
+    let levelT = amplitudeT.getLevel()
+    // console.log(levelT)
+
+    if (soundT.currentTime() > soundT.duration() / 2.2) {
+        size = 116 // console.log(size)
+        x = map(aigu, 0, 250, 80, width - 200)
+        y = map(levelT, 0, 0.2, 50, height)
+    }
+    noStroke()
+    fill(random(palette))
+    ellipse(x, y, size, size)
+
+
+    pop()
 
 }
 
@@ -765,7 +820,7 @@ function animW() {
     var distY = 6 * height / 7
     let progress = map(soundW.currentTime(), 0, soundW.duration() - 1.5, 0, 1)
 
-    fill(90,100,187);
+    fill(90, 100, 187);
     noStroke()
     if (progress < 1) {
         var x = (width / 8) + progress * distX;
@@ -799,7 +854,6 @@ function animY() {
 
 
 function animZ() {
-    amplitudeZ.setInput(soundZ)
     var levelZ = amplitudeZ.getLevel()
     //console.log(levelZ)
 
@@ -811,7 +865,7 @@ function animZ() {
         biscottes.push(new biscotte())
         // console.log("neew")
     }
-   // console.log(biscottes.length)
+    // console.log(biscottes.length)
     for (let i = 0; i < biscottes.length; i++) {
 
         biscottes[i].update(); // update biscotte transparency
