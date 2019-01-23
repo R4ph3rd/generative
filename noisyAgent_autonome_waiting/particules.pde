@@ -25,6 +25,11 @@ class Particle {
     // println("location :", location.x, "  ", location.y);
     PVector attraction = PVector.sub(target, location); //make vector pointing towards mouse
     float distance = attraction.mag(); //distance between particle and mouse
+    if(ok == true) {
+      distance = distance * 0.73 ;    // également pour diminuer la valeur pour accéléder le mvt des particules, tout est bon dans le cochon!
+          if ( timer > t_stamp ) numDist = 30; // particules qui s'excitent avant de se jeter sur la proie
+    }
+    
     float m = numDist /(distance * distance); //formule de gravité pour calculer la force = l'accélération
     attraction.normalize(); //distance vecteur = 1
     attraction.mult(m);
@@ -92,9 +97,9 @@ class Particle {
       ellipse(_zoneX, _zoneY, 5, 5);
       popStyle();
 
-      println("trou = ", trou);
-      println("////////////", _zoneX, " ////// zoneY = ", _zoneY);
-      println("vitesse = ", vitesse);
+     // println("trou = ", trou);
+     // println("////////////", _zoneX, " ////// zoneY = ", _zoneY);
+     // println("vitesse = ", vitesse);
     }
   }
 
@@ -130,11 +135,11 @@ class Particle {
         //Distance 
         float d = dist(_x, _y, t.posX, t.posY);
         //Probabilité de rencontre
-        float p = random(20);
-        if (d <= 100 && p<1) {
-          println("on peut dessiner");
+        float p = random(150);
+        if (d <= 50 && p<1) {
+        //  println("on peut dessiner");
           pushStyle();
-          strokeWeight(2);
+          strokeWeight(0.5);
           stroke(0);
           line(_x, _y, t.posX, t.posY);
           popStyle();
@@ -145,10 +150,10 @@ class Particle {
 
   /////////////////// UPDATE ///////////////////////////////////////////////////////////
   void update() {  
-    numDist = 20;
+    numDist = 100;
     for (int i =0; i <particules.length; i ++) {
-      xoff[i] += random(0.006);
-      yoff[i] += random(0.008);
+      xoff[i] += random(0.08);
+      yoff[i] += random(0.08);
       //float bou = map (noise(xoff[i],i*5,50), 0, 1, -5, 5);
       //float lou =  map (noise(yoff[i],i*23,15), 0, 1, -5, 5);
       // println(bou,"  ",lou);
@@ -173,6 +178,13 @@ class Particle {
     //vérification que l'on est pas hors champ ou dans la zone 
     if (ok == false) stayHereBro();
     location.add(vitesse); // vecteur position = dérivée de la vitesse
+    
+    if (ok == true){    //comportement grésillant lorsque les agents foncent vers la cible
+    int posneg = (int(random(0, 2)) < 1) ? 1: -1;
+      location.x = location.x + (posneg * random(3));
+      location.y = location.y + (posneg * random(3));
+    }
+    
     acceleration.mult(0); //clear acceleration each frame
 
     //enregistrer les anciennes positions

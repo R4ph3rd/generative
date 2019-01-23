@@ -1,5 +1,5 @@
 int n=10000;
-Particle[] particules = new Particle[5];
+Particle[] particules = new Particle[10];
 PVector target;
 float xoff, yoff;
 float[] x = new float[n]; 
@@ -24,6 +24,7 @@ void draw() {
   rect(0, 0, width, height);
   popMatrix();
 
+if (ok == true ) t_stamp = millis();
   for (int i =0; i < particules.length; i++) {
     particules[i].update();
     particules[i].display(i);
@@ -31,10 +32,16 @@ void draw() {
   fill(0);
   
   //en attendant
-  println("ok = ", ok);
+//  println("ok = ", ok); 
 }
 
 void keyPressed() {
-  if (keyCode == TAB) ok = false;
-  if (keyCode == SHIFT) ok = true;
+  if (keyCode == TAB) {
+    ok = false;
+    timer = t_stamp + 1;
+  }
+  if (keyCode == SHIFT) {
+    ok = true;
+    timer = millis() + 600; // timer pour l'excitation des particles
+  }
 }
