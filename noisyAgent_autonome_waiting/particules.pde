@@ -2,7 +2,7 @@ class Particle {
   PVector location, vitesse, acceleration;
   //  float[] xT = new float [n];
   // float[] yT = new float[n];
-  float xT, yT;
+  float xT, yT, maxLines;
   float[] xoff = new float[n];
   float[] yoff = new float[n];
   float[] xpos = new float[n];
@@ -23,16 +23,18 @@ class Particle {
     target = new PVector(_xT, _yT);
     // println("target :", target.x, "  ", target.y);
     // println("location :", location.x, "  ", location.y);
-    PVector attraction = PVector.sub(target, location); //make vector pointing towards mouse
-    float distance = attraction.mag(); //distance between particle and mouse
-    if(ok == true) {
+    PVector attraction = PVector.sub(target, location); //make vector pointing towards target
+    float distance = attraction.mag();
+    if (ok == true) {
       distance = distance * 0.73 ;    // également pour diminuer la valeur pour accéléder le mvt des particules, tout est bon dans le cochon!
-          if ( timer > t_stamp ) numDist = 30; // particules qui s'excitent avant de se jeter sur la proie
+      if ( timer > t_stamp ) numDist = 30; // particules qui s'excitent avant de se jeter sur la proie
     }
-    
+
     float m = numDist /(distance * distance); //formule de gravité pour calculer la force = l'accélération
     attraction.normalize(); //distance vecteur = 1
     attraction.mult(m);
+    maxLines = map(vitesse.mag(), 0, 5, 400, 998); //certes pas placé au mieux, mais j'utilise des variables localespour calculer distance...
+    maxLines = constrain(maxLines,400,998); //
     return attraction;
   }
 
@@ -85,8 +87,9 @@ class Particle {
     float  trou = dist(width/2, height/2, _zoneX, _zoneY);
 
     if (trou < 71 && ok == false) { //si ils sont à X distance du centre et qu'il n'y a pas de food,
-      int dir2 = (int(random(0, 2)) < 1) ? 1: -1;       //set rebound direction
-      xT = _zoneX +( 50 * _dir );     // forcer une ejection du centre
+      int dir2 = (int(random(0, 2)) < 1) ? 1: -1;       //attribut 
+      numDist = 5000 ; //en augmentant le numérateur du rapport d'attraction, j'augmente sa vitesse de déplcement : l'agent est perturbé car ilse trovue dans "LA ZONE INTERDIIIIITE" --> il peut forcer la condition pour en sortir (plus rapidement au passage) car les déplacements effectués sont plus grands
+      xT = _zoneX + ( 50 * _dir );     // forcer une ejection du centre
       yT = _zoneY + ( 50 * dir2 );
       applyForces();
 
@@ -97,9 +100,9 @@ class Particle {
       ellipse(_zoneX, _zoneY, 5, 5);
       popStyle();
 
-     // println("trou = ", trou);
-     // println("////////////", _zoneX, " ////// zoneY = ", _zoneY);
-     // println("vitesse = ", vitesse);
+      // println("trou = ", trou);
+      // println("////////////", _zoneX, " ////// zoneY = ", _zoneY);
+      // println("vitesse = ", vitesse);
     }
   }
 
@@ -122,22 +125,23 @@ class Particle {
 
   /////////////////////////////// TOILE D ARAIGNEE //////////////////////////
 
-  void toileAraignee(float _x, float _y) {
+  void toileAraignee(float _x, float _y, float _maxLines) {
     //virer les anciennes valeurs
     if (toiles.size() > 1000) toiles.remove(0);
 
 
 
     if (toiles.size() >= 1000) {
-      for (int i = 1; i < 1000; i++) {
+      println(_maxLines);
+      for (int i = 1; i < _maxLines; i++) {
         //println("toilessize ok");
         Toile t = toiles.get(i);
         //Distance 
         float d = dist(_x, _y, t.posX, t.posY);
         //Probabilité de rencontre
-        float p = random(150);
-        if (d <= 50 && p<1) {
-        //  println("on peut dessiner");
+        float p = random(20);
+        if (d <= 25 && p<1) {
+          //  println("on peut dessiner");
           pushStyle();
           strokeWeight(0.5);
           stroke(0);
@@ -150,7 +154,7 @@ class Particle {
 
   /////////////////// UPDATE ///////////////////////////////////////////////////////////
   void update() {  
-    numDist = 100;
+    numDist = 400;
     for (int i =0; i <particules.length; i ++) {
       xoff[i] += random(0.08);
       yoff[i] += random(0.08);
@@ -178,13 +182,13 @@ class Particle {
     //vérification que l'on est pas hors champ ou dans la zone 
     if (ok == false) stayHereBro();
     location.add(vitesse); // vecteur position = dérivée de la vitesse
-    
-    if (ok == true){    //comportement grésillant lorsque les agents foncent vers la cible
-    int posneg = (int(random(0, 2)) < 1) ? 1: -1;
+
+    if (ok == true) {    //comportement grésillant lorsque les agents foncent vers la cible
+      int posneg = (int(random(0, 2)) < 1) ? 1: -1;
       location.x = location.x + (posneg * random(3));
       location.y = location.y + (posneg * random(3));
     }
-    
+
     acceleration.mult(0); //clear acceleration each frame
 
     //enregistrer les anciennes positions
@@ -195,10 +199,10 @@ class Particle {
 
   /////////////////////////////// DISPLAY ////////////////////////////////
   PVector display(int _index) {
-    fill(0, 255, 0);
-    ellipse(location.x, location.y, 5, 5);
+    //fill(0, 255, 0);
+    ellipse(location.x, location.y, 1, 1);
 
-    toileAraignee(location.x, location.y);
+    toileAraignee(location.x, location.y, maxLines);
     noFill();
     ellipse(width/2, height/2, 100, 100);
 
