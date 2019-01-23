@@ -1,11 +1,14 @@
 int n=10000;
 Particle[] particules = new Particle[10];
+//Agent[] agent_life = new AGENT_life[n];
 PVector target;
 float xoff, yoff;
 float[] x = new float[n]; 
 float[] y = new float[n]; 
 boolean ok = false;
-float timer, t_stamp;
+float timer, t_stamp, t_life; //timer d'excitation et décompte de la jauge de vie des particules
+int Agents ; //nb d'agents
+
 
 void setup() {
   size(500, 500);
@@ -14,7 +17,7 @@ void setup() {
   stroke(0, 64);
 
   for (int i = 0; i < particules.length; i++) {
-    particules[i] = new Particle(int(random(0, width)), int(random(0, height)));
+    particules[i] = new Particle(int(random(0, width)), int(random(0, height)), 255);
   }
 }
 
@@ -42,6 +45,6 @@ void keyPressed() {
   }
   if (keyCode == SHIFT) {
     ok = true;
-    timer = millis() + 600; // timer pour l'excitation des particles
+   // timer = millis() + 600; // timer pour l'excitation des particles
   }
 }

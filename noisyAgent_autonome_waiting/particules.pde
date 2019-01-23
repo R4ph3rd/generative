@@ -1,5 +1,6 @@
 class Particle {
   PVector location, vitesse, acceleration;
+  float life;
   //  float[] xT = new float [n];
   // float[] yT = new float[n];
   float xT, yT, maxLines;
@@ -11,11 +12,12 @@ class Particle {
   ArrayList<Toile> toiles = new ArrayList();
 
 
-  Particle(int x, int y) {
+  Particle(int x, int y,int _life) {
     // particle class should have location, vitesse & acceleration
     location = new PVector(x, y);
     vitesse = new PVector(0, 0);
     acceleration = new PVector(0, 0);
+    life = _life;
   }
 
   /////////////////////////////// CALCULS VECTEURS /////////////////////////
@@ -33,8 +35,8 @@ class Particle {
     float m = numDist /(distance * distance); //formule de gravité pour calculer la force = l'accélération
     attraction.normalize(); //distance vecteur = 1
     attraction.mult(m);
-    maxLines = map(vitesse.mag(), 0, 5, 400, 998); //certes pas placé au mieux, mais j'utilise des variables localespour calculer distance...
-    maxLines = constrain(maxLines,400,998); //
+    maxLines = map(vitesse.mag(), 0, 5, 600, 998); //certes pas placé au mieux, mais j'utilise des variables localespour calculer distance...
+    maxLines = constrain(maxLines,600,998); // utilisé pour contraindre un peu le nombre de ligne tracé si l'agent est lent (et éviter l'impression gros paté)
     return attraction;
   }
 
@@ -132,7 +134,7 @@ class Particle {
 
 
     if (toiles.size() >= 1000) {
-      println(_maxLines);
+     // println(_maxLines);
       for (int i = 1; i < _maxLines; i++) {
         //println("toilessize ok");
         Toile t = toiles.get(i);
@@ -144,13 +146,28 @@ class Particle {
           //  println("on peut dessiner");
           pushStyle();
           strokeWeight(0.5);
-          stroke(0);
+          stroke(0, life);
           line(_x, _y, t.posX, t.posY);
           popStyle();
         }
       }
     }
   }
+  
+  
+  //////////////////////////////// LIFE AGENTS //////////////////////////////////////////////////////////////
+  
+ // int life_agents(){
+    
+   //return life;
+ // }
+ 
+ 
+ /////////////////////////////////////// LA FAIM ///////////////////////////////////////////
+ 
+ void faim(){
+   
+ }  
 
   /////////////////// UPDATE ///////////////////////////////////////////////////////////
   void update() {  
@@ -194,6 +211,9 @@ class Particle {
     //enregistrer les anciennes positions
     Toile oldPos = new Toile(location.x, location.y);
     toiles.add(oldPos);
+    
+    //mettre à jour sa jauge de vie
+   // life_agents();
   }
 
 
