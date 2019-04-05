@@ -28,7 +28,7 @@ class Agent {
     
     pos.x += sin( random(noisySpeed) + cos(angle)) * stepSize * dir;
     pos.y += cos( random(noisySpeed) + sin(angle)) * stepSize * dir;
-    pos.z += sin( random(noisySpeed) + sin(angle)) * stepSize * dir;
+    pos.z += sin( random(noisySpeed)) + sin(angle) * stepSize * dir;
 
    /* float dx = 250 * (float) noise.eval( SEED + rad * cos(TWO_PI * (nperiod * p )), rad * sin(TWO_PI * ( nperiod * p )), cos( theta1 - TWO_PI ));
     float dy = 250 * (float) noise.eval( 2 * SEED + rad * cos(TWO_PI * ( nperiod * p )), rad * sin(TWO_PI * ( nperiod * p )), sin(theta2 - TWO_PI ) );
@@ -36,11 +36,11 @@ class Agent {
 
 
     //in case that it goes out 
-    if ( pos.x > width + 5 || pos.x < -5 || pos.y > height + 5 || pos.y < -5) {
+/*    if ( pos.x > width + 5 || pos.x < -5 || pos.y > height + 5 || pos.y < -5) {
       pos.x = random(width);
       pos.y = random(height);
       oldPos.set(pos);
-    }
+    }*/
     noisy += noisySpeed;
   }
 
