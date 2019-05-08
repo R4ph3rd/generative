@@ -40,6 +40,14 @@ class GUI{
         ctrlHair.setGroup(ctrl);
         ctrlHair.close();
         
+        ControlGroup ctrlColor = cp5.addGroup("COLORS",20,100);
+        ctrlColor.activateEvent(true);
+        ctrlColor.setColorLabel(label);
+        ctrlColor.setGroup(ctrl);
+        ctrlColor.close();
+        
+         cp5.addButton("Reset").setPosition(20,120).setSize(100,30).setGroup(ctrl);
+        
         //eyes GUI
       cp5.addSlider("eyeSize").setPosition(110,0).setSize(200,15)
                            .setRange(50,200)
@@ -86,7 +94,13 @@ class GUI{
                            .setValue(0.5)
                            .setColorCaptionLabel(label)
                            .setGroup(ctrlNM);
-      cp5.addButton("Reset").setPosition(20,120).setSize(100,30).setGroup(ctrl);
+     
+      
+      //colors
+     cp5.addButton("SET_1").setPosition(120,0).setSize(80,30).setGroup(ctrlColor);
+     cp5.addButton("SET_2").setPosition(120,40).setSize(80,30).setGroup(ctrlColor);
+     cp5.addButton("SET_3").setPosition(120,80).setSize(80,30).setGroup(ctrlColor);
+     cp5.addButton("SET_4").setPosition(120,120).setSize(80,30).setGroup(ctrlColor);
   }
   
 }

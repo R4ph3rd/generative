@@ -3,10 +3,12 @@ void backgroundPatern(color c){
   pushStyle();
   noFill();
   background(c);
+  if (pattern == 0){
   color cbis = color( red(c) - 60, green(c) - 60, blue(c) - 60);
   stroke(cbis);
   strokeWeight(60);
   rect(0,0,width,height);
+  } else if (pattern == 1)
   popStyle();
 }
 
@@ -23,6 +25,14 @@ void corpse(color c){
 void head(color cf, color cc_){
   pg2.beginDraw();
   pg2.pushStyle();
+  pg2.noFill();
+  pg2.strokeWeight(1);
+    for (int i = int(headSize + (headSize/9)) ; i > 0 ; i --){
+     float k = map (i, headSize + headSize/9, 0, 0, 1);
+     float a = map(k,0,1,0,180);
+     pg2.stroke(0,a);
+     pg2.ellipse(width/2, headY, i * lh, i * hh);
+  }
   pg2.noStroke();
   for (int i = int(headSize) ; i > 0 ; i --){
      float k = map (i, headSize, 0, 0, 1);
@@ -119,26 +129,28 @@ void eyes(color c, color c_){
 }
 
 
-void hairs(color c){
+void hairs(color cf_, color cc_){
   pg5.beginDraw();
   pg5.pushStyle();
   pg5.noFill();
   pg5.strokeWeight(1);
-  pg5.stroke(pc);
+  pg5.stroke(cf_);
   
   for (int i = 0 ; i < 360 ; i ++){
-    float xmin = (width/2 * cos(i) ) - (headSize/2 * lh);
-    float xmax = (width/2 * cos(i) ) + (headSize/2 * lh);
-    float ymin = (height/2 * sin(i) ) - (headSize/2 * hh);
-    float ymax = (height/2 * sin(i) ) + (headSize/2 * hh);
+    float xmin = (width/2 ) - (headSize/3 * lh)  * cos(i) ;
+    float xmax = (width/2 ) + (headSize/3 * lh)  * cos(i);
+    float ymin = (height/2 ) - (headSize/4 * hh)* sin(i) - headSize/3;
+    float ymax = (height/2 ) + (headSize/4 * hh) * sin(i) - headSize/3;
     
     PVector b1 = new PVector (random(xmin , xmax), random( ymin , ymax));
     PVector b2 = new PVector (random(xmin , xmax), random( ymin , ymax));
     PVector b3 = new PVector (random(xmin , xmax), random( ymin , ymax));
     PVector b4 = new PVector (random(xmin , xmax), random( ymin , ymax));
-                             ellipse((width/2 + headSize/2 * lh) * cos(i) , (height/2 + headSize/2 * hh) * sin(i), 10,10);
-    pg5.stroke(random(255));
-    println(b1.x,"  ", b1.y,"  ", b2.x,"  ", b2.y,"  ", b3.x,"  ", b3.y,"  ", b4.x,"  ", b4.y);
+    //ellipse((width/2 + headSize/2 * lh) * cos(i) , (height/2 + headSize/2 * hh) * sin(i), 10,10);
+    float r = random(1) < 0.5 ? 0 : 1;
+    if (r == 0 ) pg5.stroke(cf_);
+    else pg5.stroke(cc_);   
+   // println(b1.x,"  ", b1.y,"  ", b2.x,"  ", b2.y,"  ", b3.x,"  ", b3.y,"  ", b4.x,"  ", b4.y);
    pg5.bezier(b1.x, b1.y, b2.x, b2.y, b3.x, b3.y, b4.x, b4.y);
                              
   }

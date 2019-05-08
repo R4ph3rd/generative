@@ -10,6 +10,7 @@ PGraphics pg1, pg2, pg3, pg4, pg5 ;
 
 color bgrd = color(240,191,233);
 color sc, sh, sh1, nc, pc;
+int pattern = 0;
 
 //coefs
 float shoulders = 1.2;
@@ -39,14 +40,8 @@ void setup(){
   col = new ArrayList();
   gui = new GUI(this);
   
-  setColors();
-  
-  sc =  color( red(bgrd) * 0.25, green(bgrd) * 0.25, blue(bgrd) * 0.25);
-  sh =  color( red(bgrd) * 0.6, green(bgrd) * 0.6, blue(bgrd) * 0.6);
-  sh1 =  color( red(bgrd) * 0.4, green(bgrd) * random(0.01,0.3), blue(bgrd) * random(0.05,0.2));
-  nc = color( red(bgrd) * 0.1, green(bgrd) * 0.1, blue(bgrd) * 0.1);
-  pc = color(red(bgrd) * random(0.1, 0.4), green(bgrd) * random(0.3,0.5), blue(bgrd) * random(0.2,0.9));
-  
+  proportions();
+  setColors();;
   Reset();
 }
 
@@ -67,27 +62,44 @@ void draw(){
   pg4.clear();
   pg4.endDraw();
   
-  proportions();
+  pg5.beginDraw();
+  pg5.clear();
+  pg5.endDraw();
   
+  proportions();
   personas();
- // pg5.clear();
+  
+  //proof colors
+pg5.beginDraw();
+pg5.fill(cc1);
+pg5.rect(0,0,50,50);
+pg5.fill(cc2);
+pg5.rect(0,60,50,50);
+pg5.fill(cc3);
+pg5.rect(0,120,50,50);
+pg5.fill(cc4);
+pg5.rect(0,180,50,50);
+pg5.fill(cc5);
+pg5.rect(0,240,50,50);
+pg5.endDraw();
+
   image(pg1,0,0);
   image(pg2,0,0);
   image(pg3,0,0);
   image(pg4,0,0);
-  //image(pg5,0,0);
-  
-
+  image(pg5,0,0);
 }
 
 void personas(){
   backgroundPatern(cc5);
-  corpse(cc3);
+  corpse(cc1);
   head(cc1, cc2);
-  noise_(cc3);
+  noise_(cc5);
   mouth(cc4);
-  eyes(cc2,cc3);
+  eyes(cc5,cc3);
+  hairs(cc3,cc2);
 }
+
 
 void proportions(){
   //eye
@@ -100,16 +112,16 @@ void proportions(){
   //mouse
   lm = headSize * lh * mouthLength;
   hm = headSize * hh * mouthHole;
-  pm = map(mouthHole,0.1,0.4, - 1, headSize * hh / 8);
-  
+  pm = map(mouthHole,0.1,0.4, - 1, headSize * hh / 8);  
 }
+
 
 void Reset(){
   lh = 1;
   hh = 1.2;
-  headProportion = random(0,10) > 5 ? random(0,3) : random(7,10);
+  headProportion = random(0,10) < 5 ? random(0,4) : random(7,10);
   headSize = random(350,500);
-  mouthHole = random(0.1,0.25);
+  mouthHole = random(0.01,0.1);
   mouthLength = random(0.1,0.7);
   eyeSize = int(random(50,80));
   eyeProportion = random(2,10);
@@ -127,6 +139,45 @@ void Reset(){
 }
 
 void setColors(){
-  col.add(new Colors(#f3a5d9,#dd7ca4,#e1a623,#182916, #036b7e)); // rose 
-  col.add(new Colors(#024536,#1181ae,#f87f21,#4e7ac5, #1f2007)); //turquoise
+  //exterieur visage / intérieur visage // iris // clair bouche // foncé nez - pupille
+  col.add(new Colors(#e282ae, #f3a4d9, #fd9816, #e8f6f9, #182b15)); // rose 
+  col.add(new Colors(#024536,#1181ae,#f87f21,#f4a6da, #1f2007)); //turquoise
+  col.add(new Colors(#ffdda1, #edb230, #e77728, #f8c537, #574112)); //yellow
+  col.add(new Colors(#0f084b, #26408b, #a6cfd5, #c2e7d9, #0d0221)); //blue
+}
+
+void SET_1(){
+    Colors c = col.get(0);
+  cc1 = c.c1;
+  cc2 = c.c2;
+  cc3 = c.c3;
+  cc4 = c.c4;
+  cc5 = c.c5;
+}
+
+void SET_2(){
+    Colors c = col.get(1);
+  cc1 = c.c1;
+  cc2 = c.c2;
+  cc3 = c.c3;
+  cc4 = c.c4;
+  cc5 = c.c5;
+}
+
+void SET_3(){
+    Colors c = col.get(2);
+  cc1 = c.c1;
+  cc2 = c.c2;
+  cc3 = c.c3;
+  cc4 = c.c4;
+  cc5 = c.c5;
+}
+
+void set_4(){
+      Colors c = col.get(3);
+  cc1 = c.c1;
+  cc2 = c.c2;
+  cc3 = c.c3;
+  cc4 = c.c4;
+  cc5 = c.c5;
 }
