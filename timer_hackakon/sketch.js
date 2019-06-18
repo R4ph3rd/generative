@@ -7,9 +7,17 @@ let timer
 
 
 ////////// TEAMS POINTS //////////////
-let teams = ['La blanquette', 'Hubert', 'Larmina', 'Les panoramas']
+let teams = [
+  {'name':'La blanquette',
+  'points':0},
+  {'name':'Hubert',
+  'points':0},
+  {'name':'Larmina',
+  'points':0},
+  {'name':'Les panoramas',
+  'points':0}
+]
 let plus, moins, teamName, addTeam, wichTeam
-let points = [0,0,0,0]
 
 function setup(){
   let cnv = createCanvas(windowWidth, windowHeight)
@@ -80,30 +88,40 @@ function draw(){
  pop()
 
 
+
+
+
  let notUsed = true
  //////////////TEAMS////////////
  for (let i = 1 ; i - 1 < teams.length ; i++){
+
+  j = i - 1
+
+  teams.sort(function(j, i) {
+    return parseFloat(i.points) - parseFloat(j.points);
+  })
+
 
   push()
   fill(yellow)
   textSize(24)
   let y = (height / (teams.length + 1)) * i
-  let x = width - 300
+  let x = 100
 
   if (teams.length > 5){
     y = (height / 7) * i    
   }
 
   if ( i - 1 > 5 ){
-    x = 100
+    x = width - 300
     y = (height / (teams.length - 5)) * ( i - 6)
   }
 
 
 
   
-  text (teams[i - 1], x, y)
-  text(points[i - 1], x, y + 30)
+  text (teams[i - 1].name, x, y)
+  text(teams[i - 1].points, x, y + 30)
 
   if(mouseX > x - 50 && mouseX < x + 500 && mouseY > y - 50 && mouseY < y + 50){
 
@@ -133,15 +151,18 @@ function windowResized(){
 }
 
 function gainPoints(){
-    points[wichTeam] = points[wichTeam] + 10
+    teams[wichTeam].points += 10
 }
 
 function loosePoints(){
-  points[wichTeam] = points[wichTeam] - 10
+  teams[wichTeam].points -= 10
 }
 
 
 function Yeah(){
-  teams.push(teamName.value())
-  points.push(0)
+  teams.push({'name':teamName.value(),
+              'points': 0})
 }
+
+
+
