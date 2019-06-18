@@ -7,8 +7,8 @@ let timer
 
 
 ////////// TEAMS POINTS //////////////
-let teams = ['prout', 'blanquette', 'michel', 'hubert']
-let plus, moins, wichTeam
+let teams = ['La blanquette', 'Hubert', 'Larmina', 'Les panoramas']
+let plus, moins, teamName, addTeam, wichTeam
 let points = [0,0,0,0]
 
 function setup(){
@@ -22,10 +22,15 @@ function setup(){
 
   plus = createButton('plus')
   moins = createButton('moins')
+  addTeam = createButton('NEW TEAM')
+  teamName = createInput()
 
   plus.mousePressed(gainPoints)
   moins.mousePressed(loosePoints)
+  addTeam.mousePressed(Yeah)
 
+  teamName.position((width / 2) - 200, height + 100)
+  addTeam.position((width / 2) + 50, height + 100)
 }
 
 function draw(){
@@ -75,6 +80,7 @@ function draw(){
  pop()
 
 
+ let notUsed = true
  //////////////TEAMS////////////
  for (let i = 1 ; i - 1 < teams.length ; i++){
 
@@ -84,19 +90,37 @@ function draw(){
   let y = (height / (teams.length + 1)) * i
   let x = width - 300
 
+  if (teams.length > 5){
+    y = (height / 7) * i    
+  }
+
+  if ( i - 1 > 5 ){
+    x = 100
+    y = (height / (teams.length - 5)) * ( i - 6)
+  }
+
+
+
   
-  text ('TEAM ' + i, x, y)
+  text (teams[i - 1], x, y)
   text(points[i - 1], x, y + 30)
 
-  if(mouseX > x - 50 && mouseX < width){
-    if(mouseY > y - 50 && mouseY < y + 50){
+  if(mouseX > x - 50 && mouseX < x + 500 && mouseY > y - 50 && mouseY < y + 50){
+
+      notUsed = false
 
       wichTeam = i - 1
 
-      plus.position( x + 100, y - 24)
+      plus.position(x + 100, y - 24)
       moins.position(x + 170, y - 24)
-    }
+
   }
+
+  if (i == teams.length && notUsed == true){
+    plus.position(width / 2 , height + 50)
+    moins.position(width / 2 , height + 10)
+  }
+
  }
 
 pop()
@@ -104,6 +128,8 @@ pop()
 
 function windowResized(){
   resizeCanvas(windowWidth, windowHeight)
+  teamName.position((width / 2) - 200, height + 100)
+  addTeam.position((width / 2) + 50, height + 100)
 }
 
 function gainPoints(){
@@ -111,5 +137,11 @@ function gainPoints(){
 }
 
 function loosePoints(){
-  points = points[wichTeam] - 10
+  points[wichTeam] = points[wichTeam] - 10
+}
+
+
+function Yeah(){
+  teams.push(teamName.value())
+  points.push(0)
 }
