@@ -1,20 +1,24 @@
 /* settings */
-let yellow = '#fefe08'
+let yellow = '#ffff00'
+let green = '#27FFC1'
+let pink = '#FF00FF'
 let font = 'Oswald'
 let fontSize = 54
+let color = [green, yellow, pink]
+let pancarte = yellow
 
 let timer
 
 
 ////////// TEAMS POINTS //////////////
 let teams = [
-  {'name':'La blanquette',
+  {'name':'LA BLANQUETTE',
   'points':0},
-  {'name':'Hubert',
+  {'name':'HUBERT',
   'points':0},
-  {'name':'Larmina',
+  {'name':'LARMINA',
   'points':0},
-  {'name':'Les panoramas',
+  {'name':'LES PANORAMAS',
   'points':0}
 ]
 let plus, moins, teamName, addTeam, wichTeam
@@ -54,6 +58,8 @@ function draw(){
  let xcenter = ( width / 2 )  - (textWidth(timer) / 2)
  let ycenter = ( height / 2 ) + (fontSize / 2)
 
+ if (m == 59 && s == 59) pancarte = color[random(color.length)]
+
 
  let intern = map(s, 0, 60, 0, TWO_PI)
  let middle = map(m, 0, 60, 0, TWO_PI)
@@ -62,7 +68,9 @@ function draw(){
 
  push()
 
- fill(yellow)
+ fill(pancarte)
+ rect(xcenter - 20, ycenter - (fontSize / 2) - 37, textWidth(timer) + 50, fontSize + 30)
+ fill(0)
  text(timer, xcenter, ycenter)
 
  pop()
@@ -77,12 +85,12 @@ function draw(){
 
  noFill()
  ellipseMode(CENTER)
- stroke(yellow)
+ stroke(green)
  strokeWeight(12)
  arc(0, 0, 350, 350, 0, intern)
- strokeWeight(12)
+ stroke(yellow)
  arc(0, 0, 400, 400, 0, middle)
- strokeWeight(12)
+ stroke(pink)
  arc(0, 0, 450, 450, 0, extern)
 
  pop()
@@ -118,7 +126,7 @@ function draw(){
   }
 
 
-
+  fill(color[i % 3])
   
   text (teams[i - 1].name, x, y)
   text(teams[i - 1].points, x, y + 30)
@@ -160,7 +168,7 @@ function loosePoints(){
 
 
 function Yeah(){
-  teams.push({'name':teamName.value(),
+  teams.push({'name':teamName.value().toUpperCase(),
               'points': 0})
 }
 
