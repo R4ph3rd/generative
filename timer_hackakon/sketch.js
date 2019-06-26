@@ -12,14 +12,7 @@ let timer
 
 ////////// TEAMS POINTS //////////////
 let teams = [
-  {'name':'LA BLANQUETTE',
-  'points':0},
-  {'name':'HUBERT',
-  'points':0},
-  {'name':'LARMINA',
-  'points':0},
-  {'name':'LES PANORAMAS',
-  'points':0}
+  {}
 ]
 let plus, moins, teamName, addTeam, wichTeam
 
